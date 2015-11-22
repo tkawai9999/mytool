@@ -1,0 +1,19 @@
+.modal-header {
+  background-color: #f5f5f5;
+  border-color: #e7e7e7;
+}
+.modal-content.todo {
+  width:740px; 
+  height:630px;
+  margin-left: -70px;
+}
+
+.modal-content.category {
+  width:540px; 
+  height:500px;
+  margin-left: -70px;
+}
+
+
+
+
