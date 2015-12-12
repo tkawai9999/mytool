@@ -1,5 +1,6 @@
 # temp files from editors
 *~
+*.swp
 *.bak
 .DS_Store
 .buildpath
@@ -33,5 +34,7 @@ desktop.ini
 /fuel/app/config/crypt.php
 
 # config files
-fuel/app/config/*.php
-fuel/app/config/*/*.php
+fuel/app/config/db.php
+fuel/app/config/*/db.php
+fuel/app/config/migrations.php
+fuel/app/config/*/migrations.php
