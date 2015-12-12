@@ -11,8 +11,8 @@ class Create_categories
 			'name' => array('constraint' => 255, 'type' => 'varchar'),
 			'sort_no' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'delf' => array('constraint' => 11, 'type' => 'int'),
-			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
-			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
+            'created_at' =>  array('type' => 'datetime'),
+            'updated_at' =>  array('type' => 'datetime'),
 
 		), array('id'));
 	}
