@@ -134,6 +134,11 @@ class Controller_Todo extends Controller_Template
                 Presenter::Forge('todo/list', 'view', null, $view);
     }
 
+	public function action_changeStatus()
+	{
+        echo "aa";
+        $this->template->content ="";
+	}
 
 
 
@@ -141,12 +146,12 @@ class Controller_Todo extends Controller_Template
 
 
 
-/*
 
 	public function action_entry()
 	{
 		return Response::forge(View::forge('todo/form'));
 	}
+/*
 	public function action_category()
 	{
 		return Response::forge(View::forge('todo/category'));

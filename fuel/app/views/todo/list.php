@@ -58,10 +58,12 @@
       </tr>
     </thead>
     <tbody>
+    <form name='frm' >
       <?php foreach ($todos as $todo ): ?>
       <tr>
         <td>
-          <select >
+          <select id="status_<?php echo $todo->id ?>" 
+              onChange="bbbb(frm,<?php echo $todo->id ?>)">>
           <?php foreach ($statuses as $status ): ?>
             <option value='<?php echo $status->id?>'
               <?php if($status->id==$todo->status_id):?>
@@ -88,6 +90,9 @@
         </td>
       </tr>
       <?php endforeach; ?>
+      <?php echo Form::hidden("id", '')?>
+      <?php echo Form::hidden("action", '')?>
+    </form>
     </tbody>
   </table>
 <!--main end-->

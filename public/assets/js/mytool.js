@@ -29,3 +29,11 @@ function aaaa(name,url) {
     }
   });
 }
+function bbbb(form,id) {
+    form.action='http://27.120.86.104/mytool/todo/changeStatus';
+    form.id.value=id;
+    form.method='post';
+    form.submit();
+
+}
+
