@@ -40,7 +40,7 @@
 <!--main start-->
 <h3 class="page-header">
   <span class="glyphicon glyphicon-ok-circle"></span>
-  ToDo 対応中
+  ToDo <?php echo $page_name?>
 </h3>
 <p class="text-right">
   <button type="button" class="btn btn-primary "
@@ -75,8 +75,17 @@
               <?php echo $todo->name; ?></a>
         </td>
         <td><?php echo $todo->category->name ?></td>
-        <td>-</td>
-        <td>10/10<font color="red">(残り3日)</font></td>
+        <td><?php echo $todo->start_date ?></td>
+        <td> 
+          <?php if ($todo->end_date==""): ?>
+            -
+          <?php else: ?>
+            <?php if ($todo->remain_day<=0 ) echo " <font color=\"red\">" ?> 
+            <?php echo date('m/d',strtotime($todo->end_date)) ?>
+                 (残り<?php echo $todo->remain_day?>日)
+            <?php if ($todo->remain_day<=0 ) echo "</font>" ?> 
+          <?php endif; ?>
+        </td>
       </tr>
       <?php endforeach; ?>
     </tbody>

@@ -38,6 +38,7 @@ class Controller_Todo extends Controller_Template
 
         //Todo一覧作成
         $data['side_during'] =  "active";
+        $data['page_name'] =  "対応中";
         $data['todos'] = Model_Todo::getListDuring();
 
         $view= View::forge('todo/list',$data);
@@ -55,6 +56,7 @@ class Controller_Todo extends Controller_Template
         
         //Todo一覧作成
         $data['side_untreat1'] =  "active";
+        $data['page_name'] =  "未(期限有）";
         $data['todos'] = Model_Todo::getListUntreatDeadLineYes();
 
         $view= View::forge('todo/list',$data);
@@ -72,6 +74,7 @@ class Controller_Todo extends Controller_Template
         
         //Todo一覧作成
         $data['side_untreat2'] =  "active";
+        $data['page_name'] =  "未(期限無）";
         $data['todos'] = Model_Todo::getListUntreatDeadLineNo();
 
         $view= View::forge('todo/list',$data);
@@ -89,6 +92,7 @@ class Controller_Todo extends Controller_Template
         
         //Todo一覧作成
         $data['side_hold'] =  "active";
+        $data['page_name'] =  "保留";
         $data['todos'] = Model_Todo::getListHold();
 
         $view= View::forge('todo/list',$data);
@@ -106,6 +110,7 @@ class Controller_Todo extends Controller_Template
         
         //Todo一覧作成
         $data['side_finished'] =  "active";
+        $data['page_name'] =  "完了";
         $data['todos'] = Model_Todo::getListFinished();
 
         $view= View::forge('todo/list',$data);

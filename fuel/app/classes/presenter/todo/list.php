@@ -22,6 +22,19 @@ class Presenter_Todo_List extends Presenter
 
         //ステータス一覧取得
         $this->statuses =  Model_Status::getListAll();
+
+        //Todo一覧編集(残り日数追加)
+        $list=array();
+        foreach( $this->_view->todos as $rec)
+        {
+            if ( $rec['end_date'] <>"" )
+            {
+                $rec['remain_day']= Model_Util::getRemainDay($rec['end_date']);
+            }
+            array_push($list, $rec);
+        }
+        $this->todos = $list;
+
     }
 
     /**
@@ -53,8 +66,11 @@ class Presenter_Todo_List extends Presenter
                 }
             }
             $buf['active']=false;
-            if ($active_categroy_id==$buf['id']) $buf['active']=true;
-
+            if ($active_categroy_id==$buf['id']) 
+            {
+                $this->page_name =  "カテゴリ：".$buf['name'];
+                $buf['active']=true;
+            }
             array_push ( $list,$buf);
         }
         return $list;
