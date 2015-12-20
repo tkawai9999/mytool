@@ -23,11 +23,11 @@ class Model_Todo extends \Orm\Model
 	protected static $_observers = array(
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
-			'mysql_timestamp' => false,
+			'mysql_timestamp' => true,
 		),
 		'Orm\Observer_UpdatedAt' => array(
 			'events' => array('before_update'),
-			'mysql_timestamp' => false,
+			'mysql_timestamp' => true,
 		),
 	);
 
@@ -229,5 +229,41 @@ class Model_Todo extends \Orm\Model
         }
 
         return $list;
+    }
+    /**
+     * ステータスを変更する
+     *
+     * @param $todo_id 対象のtodo_id
+     * @param $status_id 対象のstatus_id
+     * @return true:正常  false:異常
+     */
+    public static function updateStatus($todo_id, $status_id)
+    {
+        Log::debug(__FUNCTION__." start");
+
+        //status_idチェック
+        $status = Model_Status::find($status_id);
+        if (count($status)==0 )
+        {
+            $msg="対象statusなし。status_id=$status_id";
+            Log::error($msg);
+            throw new Exception($msg);
+        }
+
+        //対象データ取得
+        $todo = static::find($todo_id);
+        if (count($todo)==0 )
+        {
+            $msg="対象データなし。todo_id=$todo_id";
+            Log::error($msg);
+            throw new Exception($msg);
+        }
+
+        //更新
+        $todo['status_id'] = $status_id;
+        $todo->save();
+        Log::debug(DB::last_query());
+
+        return true;
     }
 }

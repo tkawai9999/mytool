@@ -9,7 +9,7 @@
     });
   });
 
-function aaaa(name,url) {
+function openForm(name,url) {
   $.ajax({
     async:false,
     type:"post",
@@ -29,9 +29,13 @@ function aaaa(name,url) {
     }
   });
 }
-function bbbb(form,id) {
-    form.action='http://27.120.86.104/mytool/todo/changeStatus';
-    form.id.value=id;
+function changeStatus(form,id) {
+
+    var status=document.getElementById('status_'+id);
+    form.action='changeStatus';
+    form.todo_id.value=id;
+    form.status_id.value=status.value;
+    form.refer.value=location.href;
     form.method='post';
     form.submit();
 

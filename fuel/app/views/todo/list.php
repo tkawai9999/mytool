@@ -22,7 +22,7 @@
 <div class="panel panel-info">
   <div class="panel-heading">カテゴリ別&nbsp;&nbsp;
     <button type="button" class="btn btn-primary "
-      onClick="aaaa('aaa','/mytool/todo/category');" >編集</button>
+      onClick="openForm('aaa','/mytool/todo/category');" >編集</button>
   </div>
   <div class="panel-body">
     <ul class="nav nav-sidebar">
@@ -44,7 +44,7 @@
 </h3>
 <p class="text-right">
   <button type="button" class="btn btn-primary "
-    onClick="aaaa('aaa','/mytool/todo/entry');" >＋</button>
+    onClick="openForm('aaa','/mytool/todo/entry');" >＋</button>
 </p>
 <div class="table-responsive">
   <table class="table table-striped  table-hover">
@@ -63,7 +63,7 @@
       <tr>
         <td>
           <select id="status_<?php echo $todo->id ?>" 
-              onChange="bbbb(frm,<?php echo $todo->id ?>)">>
+              onChange="changeStatus(frm,<?php echo $todo->id ?>)">>
           <?php foreach ($statuses as $status ): ?>
             <option value='<?php echo $status->id?>'
               <?php if($status->id==$todo->status_id):?>
@@ -73,7 +73,7 @@
           </select>
         </td>
         <td>
-          <a onClick="aaaa('aaa','/mytool/todo/entry');" >
+          <a onClick="openForm('aaa','/mytool/todo/entry');" >
               <?php echo $todo->name; ?></a>
         </td>
         <td><?php echo $todo->category->name ?></td>
@@ -90,8 +90,9 @@
         </td>
       </tr>
       <?php endforeach; ?>
-      <?php echo Form::hidden("id", '')?>
-      <?php echo Form::hidden("action", '')?>
+      <?php echo Form::hidden("todo_id", '')?>
+      <?php echo Form::hidden("status_id", '')?>
+      <?php echo Form::hidden("refer", '')?>
     </form>
     </tbody>
   </table>

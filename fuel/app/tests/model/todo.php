@@ -107,5 +107,46 @@ class Test_Model_Todo extends \TestCase
         }
     }
 
+    /**
+     * 正常：ステータス更新
+     * @test
+     */
+    public function updateStatus_ok1(){
+        $todo_id=1;
+        $status_id=2;
+        $rc=Model_Todo::updateStatus($todo_id,$status_id);
+        $this->assertTrue($rc);
+        $info=Model_Todo::find($todo_id);
+        $this->assertEquals($info['status_id'], $status_id);
+
+        $status_id=3;
+        $rc=Model_Todo::updateStatus($todo_id,$status_id);
+        $this->assertTrue($rc);
+        $info=Model_Todo::find($todo_id);
+        $this->assertEquals($info['status_id'], $status_id);
+
+    }
+
+    /**
+     * 異常：対象のtodo_idなし
+     * @test
+     * @expectedException Exception
+     */
+    public function updateStatus_ng1(){
+        $todo_id=10000;
+        $status_id=1;
+        $rc=Model_Todo::updateStatus($todo_id,$status_id);
+    }
+    /**
+     * 異常：ステータスid不正
+     * @test
+     * @expectedException Exception
+     */
+    public function updateStatus_ng2(){
+        $todo_id=1;
+        $status_id='a';
+        $rc=Model_Todo::updateStatus($todo_id,$status_id);
+    }
+
 }
 

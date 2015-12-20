@@ -25,7 +25,7 @@ class Controller_Todo extends Controller_Template
      */
 	public function action_index()
 	{
-        $this->action_During();
+        Response::redirect("todo/during");
 	}
 
     /**
@@ -34,16 +34,24 @@ class Controller_Todo extends Controller_Template
      */
 	public function action_During()
 	{
-        $data=Input::all();
+        try
+        {
+            $data=Input::all();
 
-        //Todo一覧作成
-        $data['side_during'] =  "active";
-        $data['page_name'] =  "対応中";
-        $data['todos'] = Model_Todo::getListDuring();
+            //Todo一覧作成
+            $data['side_during'] =  "active";
+            $data['page_name'] =  "対応中";
+            $data['todos'] = Model_Todo::getListDuring();
 
-        $view= View::forge('todo/list',$data);
-        $this->template->content = 
-                Presenter::Forge('todo/list', 'view', null, $view);
+            $view= View::forge('todo/list',$data);
+            $this->template->content = 
+                  Presenter::Forge('todo/list', 'view', null, $view);
+        }
+        catch (Exception $e) 
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
 	}
 
     /**
@@ -52,16 +60,24 @@ class Controller_Todo extends Controller_Template
      */
 	public function action_Untreat1()
 	{
-        $data=Input::all();
+        try
+        {
+            $data=Input::all();
         
-        //Todo一覧作成
-        $data['side_untreat1'] =  "active";
-        $data['page_name'] =  "未(期限有）";
-        $data['todos'] = Model_Todo::getListUntreatDeadLineYes();
+            //Todo一覧作成
+            $data['side_untreat1'] =  "active";
+            $data['page_name'] =  "未(期限有）";
+            $data['todos'] = Model_Todo::getListUntreatDeadLineYes();
 
-        $view= View::forge('todo/list',$data);
-        $this->template->content = 
+            $view= View::forge('todo/list',$data);
+            $this->template->content = 
                 Presenter::Forge('todo/list', 'view', null, $view);
+        }
+        catch (Exception $e) 
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
 	}
 
     /**
@@ -70,16 +86,24 @@ class Controller_Todo extends Controller_Template
      */
 	public function action_Untreat2()
 	{
-        $data=Input::all();
+        try
+        {
+            $data=Input::all();
         
-        //Todo一覧作成
-        $data['side_untreat2'] =  "active";
-        $data['page_name'] =  "未(期限無）";
-        $data['todos'] = Model_Todo::getListUntreatDeadLineNo();
+            //Todo一覧作成
+            $data['side_untreat2'] =  "active";
+            $data['page_name'] =  "未(期限無）";
+            $data['todos'] = Model_Todo::getListUntreatDeadLineNo();
 
-        $view= View::forge('todo/list',$data);
-        $this->template->content = 
+            $view= View::forge('todo/list',$data);
+            $this->template->content = 
                 Presenter::Forge('todo/list', 'view', null, $view);
+        }
+        catch (Exception $e) 
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
 	}
 
     /**
@@ -88,16 +112,24 @@ class Controller_Todo extends Controller_Template
      */
 	public function action_Hold()
 	{
-        $data=Input::all();
+        try
+        {
+            $data=Input::all();
         
-        //Todo一覧作成
-        $data['side_hold'] =  "active";
-        $data['page_name'] =  "保留";
-        $data['todos'] = Model_Todo::getListHold();
+            //Todo一覧作成
+            $data['side_hold'] =  "active";
+            $data['page_name'] =  "保留";
+            $data['todos'] = Model_Todo::getListHold();
 
-        $view= View::forge('todo/list',$data);
-        $this->template->content = 
+            $view= View::forge('todo/list',$data);
+            $this->template->content = 
                 Presenter::Forge('todo/list', 'view', null, $view);
+        }
+        catch (Exception $e) 
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
 	}
 
     /**
@@ -106,16 +138,24 @@ class Controller_Todo extends Controller_Template
      */
 	public function action_Finished()
 	{
-        $data=Input::all();
+        try
+        {
+            $data=Input::all();
         
-        //Todo一覧作成
-        $data['side_finished'] =  "active";
-        $data['page_name'] =  "完了";
-        $data['todos'] = Model_Todo::getListFinished();
+            //Todo一覧作成
+            $data['side_finished'] =  "active";
+            $data['page_name'] =  "完了";
+            $data['todos'] = Model_Todo::getListFinished();
 
-        $view= View::forge('todo/list',$data);
-        $this->template->content = 
+            $view= View::forge('todo/list',$data);
+            $this->template->content = 
                 Presenter::Forge('todo/list', 'view', null, $view);
+        }
+        catch (Exception $e) 
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
 	}
 
     /**
@@ -124,20 +164,48 @@ class Controller_Todo extends Controller_Template
      */
     public function action_category()
     {
-        $data=Input::all();
+        try
+        {
+            $data=Input::all();
 
-        //Todo一覧作成
-        $data['todos'] = Model_Todo::getListCategory($data['category_id']);
+            //Todo一覧作成
+            $data['todos'] = Model_Todo::getListCategory($data['category_id']);
 
-        $view= View::forge('todo/list',$data);
-        $this->template->content =
+            $view= View::forge('todo/list',$data);
+            $this->template->content =
                 Presenter::Forge('todo/list', 'view', null, $view);
+        }
+        catch (Exception $e) 
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
     }
 
+    /**
+     * ステータス更新
+     *
+     */
 	public function action_changeStatus()
 	{
-        echo "aa";
-        $this->template->content ="";
+        try
+        {
+            $data=Input::all();
+
+            $todo_id=$data['todo_id'];
+            $status_id=$data['status_id'];
+            $refer=$data['refer'];
+
+            //ステータス更新
+            $data['todos'] = Model_Todo::updateStatus($todo_id, $status_id);
+
+            Response::redirect($refer);
+        }
+        catch (Exception $e) 
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
 	}
 
 
