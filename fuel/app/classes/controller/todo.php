@@ -208,6 +208,14 @@ class Controller_Todo extends Controller_Template
         }
 	}
 
+    /**
+     * 404エラー
+     *
+     */
+    public function action_404()
+    {
+        $this->template->content = View::forge('404');
+    }
 
 
 
