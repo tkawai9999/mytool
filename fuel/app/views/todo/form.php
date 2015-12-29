@@ -25,50 +25,57 @@
     <h4 class="modal-title">ToDo 登録</h4>
   </div><!-- /modal-header -->
   <div class="modal-body">
-     <form class="form-horizontal" role="form">
+     <form class="form-horizontal" role="form" name='fm'>
         <div class="form-group">
-          <label for="task" class="col-sm-3 control-label">タスク</label>
+          <label for="name" class="col-sm-3 control-label">タスク</label>
           <div class="col-sm-8">
-            <input type="text" class="form-control" id="task" value="">
+            <input type="text" class="form-control" name="name" 
+                            value="<?php echo $todo['name'] ?>">
           </div>
         </div>
 
         <div class="form-group">
           <label for="birth" class="col-sm-3 control-label ">開始</label>
           <div class="col-sm-8 form-inline">
-            <input type="text" class="form-control" id="yaar_s" value="2015" style="width: 100px"><span style="margin: 0 5px;">年</span>
-            <input type="text" class="form-control" id="month_s" value="12" style="width: 50px"><span style="margin: 0 5px;">月</span>
-            <input type="text" class="form-control" id="day_s" value="31" style="width: 50px"><span style="margin: 0 5px;">日</span>
-            <input type="text" class="form-control" id="hour_s" value="23" style="width: 50px"><span style="margin: 0 5px;">時</span>
-            <input type="text" class="form-control" id="minute_s" value="59" style="width: 50px"><span style="margin: 0 5px;">分</span>
+            <input type="text" class="form-control" name="start_y" value="<?php echo $todo['start_y'] ?>" style="width: 100px"><span style="margin: 0 5px;">年</span>
+            <input type="text" class="form-control" name="start_m" value="<?php echo $todo['start_m'] ?>" style="width: 50px"><span style="margin: 0 5px;">月</span>
+            <input type="text" class="form-control" name="start_d" value="<?php echo $todo['start_d'] ?>" style="width: 50px"><span style="margin: 0 5px;">日</span>
+            <input type="text" class="form-control" name="start_h" value="<?php echo $todo['start_h'] ?>" style="width: 50px"><span style="margin: 0 5px;">時</span>
+            <input type="text" class="form-control" name="start_mi" value="<?php echo $todo['start_mi'] ?>" style="width: 50px"><span style="margin: 0 5px;">分</span>
           </div>
         </div>
        <div class="form-group">
           <label for="s" class="col-sm-3 control-label ">終了(期限)</label>
           <div class="col-sm-8 form-inline">
-            <input type="text" class="form-control" id="yaar_s" value="2015" style="width: 100px"><span style="margin: 0 5px;">年</span>
-            <input type="text" class="form-control" id="month_s" value="12" style="width: 50px"><span style="margin: 0 5px;">月</span>
-            <input type="text" class="form-control" id="day_s" value="31" style="width: 50px"><span style="margin: 0 5px;">日</span>
-            <input type="text" class="form-control" id="hour_s" value="23" style="width: 50px"><span style="margin: 0 5px;">時</span>
-            <input type="text" class="form-control" id="minute_s" value="59" style="width: 50px"><span style="margin: 0 5px;">分</span>
+            <input type="text" class="form-control" name="end_y" value="<?php echo $todo['end_y'] ?>" style="width: 100px"><span style="margin: 0 5px;">年</span>
+            <input type="text" class="form-control" name="end_m" value="<?php echo $todo['end_m'] ?>" style="width: 50px"><span style="margin: 0 5px;">月</span>
+            <input type="text" class="form-control" name="end_d" value="<?php echo $todo['end_d'] ?>" style="width: 50px"><span style="margin: 0 5px;">日</span>
+            <input type="text" class="form-control" name="end_d" value="<?php echo $todo['end_d'] ?>" style="width: 50px"><span style="margin: 0 5px;">時</span>
+            <input type="text" class="form-control" name="end_mi" value="<?php echo $todo['end_mi'] ?>" style="width: 50px"><span style="margin: 0 5px;">分</span>
           </div>
         </div>
         <div class="form-group">
           <label for="birth" class="col-sm-3 control-label ">繰り返し</label>
           <div class="col-sm-8 form-inline">
-            <label class="checkbox">
-            <input type="checkbox" value="">する</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="text" class="form-control" id="yaar_s" value="1" style="width: 50px">&nbsp;&nbsp;&nbsp;
-                   <select class="form-control"  style="width: 100px">
-                      <option>日</option>
-                      <option>週</option>
-                      <option>月</option>
-                      <option>年</option>
-                    </select>
-                    <span style="margin: 0 5px;">毎</span>
+            <label class="checkbox"> 
+            <input type="checkbox" name='repeat_flag' value="1" 
+            <?php if ($todo['repeat_flag'] == 1) echo "checked"; ?> >
+            する</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" class="form-control" name="repeat_interval" 
+              value="<?php echo $todo['repeat_interval'] ?>" 
+              style="width: 50px"> &nbsp;&nbsp;&nbsp;
+            <select class="form-control" name='repeat_unit_id' style="width: 150px">
+              <?php foreach ($repetunits as $repetunit ): ?>
 
+                <option value='<?php echo $repetunit->id?>'
+                  <?php if($repetunit->id==$todo['repeat_unit_id']) echo "selected"?>>
+                  <?php echo $repetunit->name?></option>
+              <?php endforeach; ?>
+            </select>
+            <span style="margin: 0 5px;">毎</span>
           </div>
         </div>
+<!-- 当面保留
         <div class="form-group">
           <label for="birth" class="col-sm-3 control-label ">カレンダー表示</label>
           <div class="col-sm-8 form-inline">
@@ -76,47 +83,60 @@
             <input type="checkbox" value="">する</label>
          </div>
         </div>
-    
+-->    
         <div class="form-group">
           <label for="birth" class="col-sm-3 control-label ">ステータス</label>
           <div class="col-sm-8 form-inline">
-                   <select class="form-control" style="width: 150px">
-                      <option>未</option>
-                      <option>対応中</option>
-                      <option>完了</option>
-                      <option>保留</option>
-                    </select>
+            <select class="form-control" name=' status_id' style="width: 150px">
+              <?php foreach ($statuses as $status ): ?>
+
+                <option value='<?php echo $status->id?>'
+                  <?php if($status->id==$todo['status_id']) echo "selected"?>>
+                  <?php echo $status->name?></option>
+              <?php endforeach; ?>
+            </select>
           </div>
         </div>
         <div class="form-group">
           <label for="birth" class="col-sm-3 control-label ">カテゴリ</label>
           <div class="col-sm-8 form-inline">
-                   <select class="form-control" style="width: 150px">
-                      <option>デフォルト</option>
-                      <option>近々作業</option>
-                      <option>定常作業</option>
-                      <option>イベント</option>
-                    </select>
+            <select class="form-control" name='category_id' style="width: 150px">
+              <?php foreach ($categories as $category ): ?>
+
+                <option value='<?php echo $category->id?>'
+                  <?php if($category->id==$todo['category_id']) echo "selected"?>>
+                  <?php echo $category->name?></option>
+              <?php endforeach; ?>
+            </select>
           </div>
         </div>
 
         <div class="form-group">
           <label class="col-sm-3 control-label">ノート</label>
           <div class="col-sm-8">
-            <textarea class="form-control" rows="3"></textarea>
+            <textarea class="form-control" rows="3" name='note'><?php echo $todo['note']?></textarea>
           </div>
         </div>
+        <input type="hidden" name="todo_id"  value="" >
+        <input type="hidden" name="refer"  value="<?php echo $refer?>" >
       </form>
     </div><!-- /modal-body -->
     <div class="modal-footer">
-      <button type="button" class="btn btn-danger" data-dismiss="modal">削除</button>
-      <button type="button" class="btn btn-success" data-dismiss="modal">新規に保存</button>
-      <button type="button" class="btn btn-primary" data-dismiss="modal">変更を保存</button>
-      <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+      <?php if ($todo['todo_id'] ==""): ?>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" 
+          onClick="saveForm(fm,'')"> 新規に保存</button>
+      <?php else: ?>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"
+          onClick="deleteForm(fm,'<?php echo $todo['todo_id']?>')">
+          削除</button>
+        <button type="button" class="btn btn-success" data-dismiss="modal"
+          onClick="saveForm(fm,'')"> 新規に保存</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+          onClick="saveForm(fm,'<?php echo $todo['todo_id']?>')">
+          変更を保存</button>
+      <?php endif ?>
     </div><!-- /modal-footer -->
   </body>
   </html>
 </div>
 </div>
-
-

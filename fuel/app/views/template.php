@@ -31,7 +31,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav ">
             <li class="<?php if(isset($menu_todo)) echo $menu_todo?>">
-              <?php echo Html::anchor('todo/','Todo');?>
+              <?php echo Html::anchor('todolist/','Todo');?>
             </li>
             <li class=""><a href="#">ブックマーク</a></li>
             <li><a href="#">ノート</a></li>

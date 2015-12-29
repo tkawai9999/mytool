@@ -2,6 +2,8 @@
 
 class Model_Todo extends \Orm\Model
 {
+    private $_save_data;
+    private $_message;
 	protected static $_properties = array(
 		'id',
 		'name',
@@ -64,7 +66,7 @@ class Model_Todo extends \Orm\Model
      */
     public static function getListDuring()
     {
-        Log::debug(__FUNCTION__." start");
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $all = static::find('all', array(
             'where' => array( array('delf', 0),),
             'order_by' => array('end_date' => 'asc'),
@@ -86,6 +88,7 @@ class Model_Todo extends \Orm\Model
                 }  
             }
         }
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
     }
 
@@ -98,7 +101,7 @@ class Model_Todo extends \Orm\Model
      */
     public static function getListUntreatDeadLineYes()
     {
-        Log::debug(__FUNCTION__." start");
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $all = static::find('all', array(
             'where' => array( array('delf', 0),
               array('status_id', Config::get('define.statuses_id.untreated')),),
@@ -111,6 +114,7 @@ class Model_Todo extends \Orm\Model
         {
             if ( $rec['end_date'] <> NULL ) array_push ( $list, $rec );
         }
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
     }
 
@@ -122,7 +126,7 @@ class Model_Todo extends \Orm\Model
      */
     public static function getListUntreatDeadLineNo()
     {
-        Log::debug(__FUNCTION__." start");
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $all = static::find('all', array(
             'where' => array( array('delf', 0),
               array('status_id', Config::get('define.statuses_id.untreated')),),
@@ -135,6 +139,7 @@ class Model_Todo extends \Orm\Model
         {
             if ( $rec['end_date'] == NULL ) array_push ( $list, $rec );
         }
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
     }
 
@@ -146,13 +151,14 @@ class Model_Todo extends \Orm\Model
      */
     public static function getListHold()
     {
-        Log::debug(__FUNCTION__." start");
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $list = static::find('all', array(
             'where' => array( array('delf', 0),
                   array('status_id', Config::get('define.statuses_id.hold')),),
             'order_by' => array('sort_no' => 'asc'),
         ));
         Log::debug(DB::last_query());
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
     }
 
@@ -164,13 +170,14 @@ class Model_Todo extends \Orm\Model
      */
     public static function getListFinished()
     {
-        Log::debug(__FUNCTION__." start");
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $list = static::find('all', array(
             'where' => array( array('delf', 0),
                array('status_id', Config::get('define.statuses_id.finished')),),
             'order_by' => array('sort_no' => 'asc'),
         ));
         Log::debug(DB::last_query());
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
     }
 
@@ -182,13 +189,14 @@ class Model_Todo extends \Orm\Model
      */
     public static function getListCategory($category_id)
     {
-        Log::debug(__FUNCTION__." start");
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $list = static::find('all', array(
             'where' => array( array('delf', 0),
                        array('category_id', $category_id),),
             'order_by' => array('sort_no' => 'asc'),
         ));
         Log::debug(DB::last_query());
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
     }
 
@@ -200,7 +208,7 @@ class Model_Todo extends \Orm\Model
      */
     public static function getCategoryCnt()
     {
-        Log::debug(__FUNCTION__." start");
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
         $all = static::find('all', array(
             'where' => array( array('delf', 0),),
@@ -228,6 +236,7 @@ class Model_Todo extends \Orm\Model
             if (!$flag) array_push ( $list,$buf);
         }
 
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
     }
     /**
@@ -239,7 +248,7 @@ class Model_Todo extends \Orm\Model
      */
     public static function updateStatus($todo_id, $status_id)
     {
-        Log::debug(__FUNCTION__." start");
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
         //status_idチェック
         $status = Model_Status::find($status_id);
@@ -264,6 +273,109 @@ class Model_Todo extends \Orm\Model
         $todo->save();
         Log::debug(DB::last_query());
 
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return true;
     }
+
+    /**
+     * ステータスを変更する
+     *
+     * @param $id 対象のtodo_id
+     * @return array todoレコード
+     */
+    public static function getPk($id)
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+        $work=array();
+
+        $work['todo_id']='3';
+        $work['name']='aaaa';
+        $work['start_y']='2016';
+        $work['start_m']='1';
+        $work['start_d']='10';
+        $work['start_h']='14';
+        $work['start_mi']='30';
+        $work['end_y']='';
+        $work['end_m']='';
+        $work['end_d']='';
+        $work['end_h']='';
+        $work['end_mi']='';
+        $work['repeat_flag']=1;
+        $work['repeat_interval']='3';
+        $work['repeat_unit_id']='3';
+        $work['status_id']=3;
+        $work['category_id']=2;
+        $work['note']='aaaaaa';
+        
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+       return $work; 
+
+    }
+    /**
+     * 登録データをセットする
+     *
+     * @param $data 登録対象のデータ
+     * @return なし
+     */
+    public function setData($data)
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+        $this->_save_data=$data;
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+    }
+
+    /**
+     * エラーメッセージの取得（Iエラーの場合）
+     *
+     * @param なし
+     * @return string エラーメッセージ
+     */
+    public function getMessage ()
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+        return $this->_message;
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+    }
+
+    /**
+     * 登録データをチェックする
+     *
+     * @param $data 登録対象のデータ
+     * @return boolean true:正常 false:異常
+     */
+    public function validData ()
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+        $this->_message='aaa';
+
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+        return true;
+    }
+    /**
+     * データを保存する
+     *
+     * @param なし
+     * @return なし
+     */
+    public function saveData ()
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+        return true;
+    }
+
+
+    /**
+     * データを削除する
+     *
+     * @param $id 削除対象のid
+     * @return true:正常  false:異常
+     */
+    public static function deleteData($id)
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+        return true;
+    }
+
 }

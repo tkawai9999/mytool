@@ -1,13 +1,14 @@
 <?php
 class Presenter_Todo_List extends Presenter
 {
-
     /**
      * 画面表示
      *
      */
     public function view()
     {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+
         //バッチ情報
         $this->cnt_during = count(Model_Todo::getListDuring());
         $this->cnt_untreat1 = count(Model_Todo::getListUntreatDeadLineYes());
@@ -35,6 +36,7 @@ class Presenter_Todo_List extends Presenter
         }
         $this->todos = $list;
 
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
     }
 
     /**
@@ -45,6 +47,8 @@ class Presenter_Todo_List extends Presenter
      */
     private function _getCategoryList($active_categroy_id)
     {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+
         //カテゴリ一覧取得
         $category_info = Model_Category::getListAll();
         //Todoに設定されたカテゴリ情報取得
@@ -73,6 +77,7 @@ class Presenter_Todo_List extends Presenter
             }
             array_push ( $list,$buf);
         }
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
     }
 }

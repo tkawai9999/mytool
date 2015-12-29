@@ -25,41 +25,44 @@
       <h4 class="modal-title">カテゴリ編集</h4>
     </div><!-- /modal-header -->
     <div class="modal-body">
-      <form class="form-horizontal" role="form">
+      <form class="form-horizontal" id='form' name='fm' role="form">
         <div class="form-group">
           <div class="col-sm-12">
             <label for="category" class=" control-label">名称</label>
           </div>
           <div class="col-sm-12">
-            <input type="category" class="form-control" id="category" value="">
+            <input type="category" class="form-control" name="category_name" id='category_name' value="">
           </div>
         </div>
         <p class="text-right">
+<!--
           <button type="button" class="btn btn-danger" 
-              data-dismiss="modal">↑</button>
+              data-dismiss="modal">↑</button>&nbsp;
           <button type="button" class="btn btn-danger" 
-              data-dismiss="modal">↓</button>
-          <button type="button" class="btn btn-danger" 
-              data-dismiss="modal">削除</button>
-          <button type="button" class="btn btn-primary" 
-              data-dismiss="modal">保存</button>
+              data-dismiss="modal">↓</button>&nbsp;&nbsp;
+-->
+          <button type="button" class="btn btn-success" 
+               onClick="clearCategory()">クリア</button>&nbsp;&nbsp;
+          <button type="button" class="btn btn-danger" data-dismiss="modal"
+              onClick="actionCategory('/mytool/categoryedit/delete')">
+              削除</button>&nbsp;&nbsp;
+          <button type="button" class="btn btn-primary" data-dismiss="modal" 
+              onClick="actionCategory('/mytool/categoryedit/save')">
+              保存</button>
         </p>
         <div class="form-group">
           <div class="col-sm-12">
-          <select name="s_category" id="s_category"  size="10" class="form-control">
-            <option>デフォルト</option>
-            <option>近々の作業</option>
-            <option>定常作業</option>
-            <option>よくある作業</option>
-            <option>ほしい物</option>
+          <select id="category_list"  size="15" class="form-control" onClick="selectCategory()">
+            <?php foreach ($categories as $category ): ?>
+              <option value='<?php echo $category->id?>'><?php echo $category->name?></option>
+            <?php endforeach; ?>
          </select>
         </div> <!--col-sm -->
         </div> <!--form-group -->
+        <input type="hidden" name="category_id"  id='category_id' value="" >
+        <input type="hidden" name="refer"  value="<?php echo $refer?>" >
       </form>
     </div><!-- /modal-body -->
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
-    </div><!-- /modal-footer -->
   </body>
   </html>
 </div>

@@ -1,22 +1,33 @@
 <?php
-class Controller_Todo extends Controller_Template
+class Controller_TodoList extends Controller_Template
 {
     /**
-     * 事前処理
+     * 前処理
      *
      */
     public function before()
     {
         parent::before(); 
+        Log::info("START ".Request::active()->controller. ":".Request::active()->action);
 
         Config::load('define',true);
         $this->template->title = Config::get('define.title_name.todo');
         $this->template->menu_todo = "active";
-        
-        Log::info(Request::active()->action. " action start");
+
         $data=Input::all();
         Log::info("param=".print_r($data,true));
 
+    }
+
+    /**
+     * 後処理
+     *
+     */
+    public function after($response)
+    {
+        $response=parent::after($response);
+        Log::info("END ".Request::active()->controller. ":".Request::active()->action);
+        return $response;
     }
 
     /**
@@ -25,14 +36,14 @@ class Controller_Todo extends Controller_Template
      */
 	public function action_index()
 	{
-        Response::redirect("todo/during");
+        Response::redirect("todolist/during");
 	}
 
     /**
      * ToDo一覧表示（対応中）
      *
      */
-	public function action_During()
+	public function action_during()
 	{
         try
         {
@@ -58,7 +69,7 @@ class Controller_Todo extends Controller_Template
      * ToDo一覧表示 未(期限有）
      *
      */
-	public function action_Untreat1()
+	public function action_untreat1()
 	{
         try
         {
@@ -84,7 +95,7 @@ class Controller_Todo extends Controller_Template
      * ToDo一覧表示 未(期限無）
      *
      */
-	public function action_Untreat2()
+	public function action_untreat2()
 	{
         try
         {
@@ -110,7 +121,7 @@ class Controller_Todo extends Controller_Template
      * ToDo一覧表示(保留)
      *
      */
-	public function action_Hold()
+	public function action_hold()
 	{
         try
         {
@@ -136,7 +147,7 @@ class Controller_Todo extends Controller_Template
      * ToDo一覧表示(完了)
      *
      */
-	public function action_Finished()
+	public function action_finished()
 	{
         try
         {
@@ -216,26 +227,4 @@ class Controller_Todo extends Controller_Template
     {
         $this->template->content = View::forge('404');
     }
-
-
-
-
-
-
-
-	public function action_entry()
-	{
-		return Response::forge(View::forge('todo/form'));
-	}
-/*
-	public function action_category()
-	{
-		return Response::forge(View::forge('todo/category'));
-	}
-	public function action_test()
-	{
-		return Response::forge(View::forge('todo/test3'));
-	}
-*/
-
 }

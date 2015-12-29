@@ -7,28 +7,28 @@
   <div class="panel-body">
     <ul class="nav nav-sidebar">
       <li class="<?php if(isset($side_during)) echo $side_during?>">
-        <?php echo Html::anchor('todo/during','対応中 <span class="badge">'.$cnt_during);?> </li>
+        <?php echo Html::anchor('todolist/during','対応中 <span class="badge">'.$cnt_during);?> </li>
       <li class="<?php if(isset($side_untreat1)) echo $side_untreat1?>">
-        <?php echo Html::anchor('todo/untreat1','未(期限有) <span class="badge">'.$cnt_untreat1);?> </li>
+        <?php echo Html::anchor('todolist/untreat1','未(期限有) <span class="badge">'.$cnt_untreat1);?> </li>
       <li class="<?php if(isset($side_untreat2)) echo $side_untreat2?>">
-        <?php echo Html::anchor('todo/untreat2','未(期限無) <span class="badge">'.$cnt_untreat2);?> </li>
+        <?php echo Html::anchor('todolist/untreat2','未(期限無) <span class="badge">'.$cnt_untreat2);?> </li>
       <li class="<?php if(isset($side_hold)) echo $side_hold?>">
-        <?php echo Html::anchor('todo/hold','保留 <span class="badge">'.$cnt_hold);?> </li>
+        <?php echo Html::anchor('todolist/hold','保留 <span class="badge">'.$cnt_hold);?> </li>
       <li class="<?php if(isset($side_finished)) echo $side_finished?>">
-        <?php echo Html::anchor('todo/finished','完了');?> </li>
+        <?php echo Html::anchor('todolist/finished','完了');?> </li>
     </ul>
   </div>
 </div>
 <div class="panel panel-info">
   <div class="panel-heading">カテゴリ別&nbsp;&nbsp;
     <button type="button" class="btn btn-primary "
-      onClick="openForm('aaa','/mytool/todo/category');" >編集</button>
+      onClick="openForm('/mytool/categoryedit','');" >編集</button>
   </div>
   <div class="panel-body">
     <ul class="nav nav-sidebar">
       <?php foreach ($categories as $category ): ?>
         <li class="<?php if($category['active']) echo 'active';?>">
-        <?php echo Html::anchor('todo/category?category_id='.$category['id'],$category['name'].' <span class="badge">'.$category['cnt']);?> </li>
+        <?php echo Html::anchor('todolist/category?category_id='.$category['id'],$category['name'].' <span class="badge">'.$category['cnt']);?> </li>
       <?php endforeach; ?>
     </ul>
   </div>
@@ -44,7 +44,7 @@
 </h3>
 <p class="text-right">
   <button type="button" class="btn btn-primary "
-    onClick="openForm('aaa','/mytool/todo/entry');" >＋</button>
+    onClick="openForm('/mytool/todoedit/','');" >＋</button>
 </p>
 <div class="table-responsive">
   <table class="table table-striped  table-hover">
@@ -73,7 +73,7 @@
           </select>
         </td>
         <td>
-          <a onClick="openForm('aaa','/mytool/todo/entry');" >
+          <a onClick="openForm('/mytool/todoedit/','<?php echo $todo->id ?>');" >
               <?php echo $todo->name; ?></a>
         </td>
         <td><?php echo $todo->category->name ?></td>

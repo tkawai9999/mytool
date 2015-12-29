@@ -33,4 +33,22 @@ class Model_Repetunit extends \Orm\Model
             'cascade_delete' => false,
         )
     );
+
+    /**
+     * 全データ取得
+     *
+     * @param なし
+     * @return array 全データ
+     */
+    public static function getListAll()
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+        $list = static::find('all', array(
+            'where' => array( array('delf', 0),),
+            'order_by' => array('sort_no' => 'asc'),
+        ));
+        Log::debug(DB::last_query());
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+        return $list;
+    }
 }
