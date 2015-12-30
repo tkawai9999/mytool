@@ -17,6 +17,11 @@ class Controller_TodoEdit extends Controller_Template
         $data=Input::all();
         Log::info("param=".print_r($data,true));
 
+        //ログインチェック
+        if (!Auth::check())
+        {
+            Response::redirect('/users/');
+        }
     }
 
     /**

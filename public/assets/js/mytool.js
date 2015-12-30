@@ -63,13 +63,12 @@ function actionCategory(url) {
     form.submit();
 }
 
-function selectCategory() {
-    var category_list=document.getElementById('category_list');
+function selectCategory(id,name) {
     var category_name=document.getElementById('category_name');
     var category_id=document.getElementById('category_id');
 
-    category_name.value=category_list.options[category_list.selectedIndex].text;
-    category_id.value=category_list.options[category_list.selectedIndex].value;
+    category_name.value=name
+    category_id.value=id
 }
 
 function clearCategory() {

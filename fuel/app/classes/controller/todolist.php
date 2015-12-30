@@ -17,6 +17,12 @@ class Controller_TodoList extends Controller_Template
         $data=Input::all();
         Log::info("param=".print_r($data,true));
 
+        //ログインチェック
+        if (!Auth::check())
+        {
+            Response::redirect('/users/');
+        }
+
     }
 
     /**
@@ -226,5 +232,13 @@ class Controller_TodoList extends Controller_Template
     public function action_404()
     {
         $this->template->content = View::forge('404');
+    }
+    /**
+     * 工事中
+     *
+     */
+    public function action_working()
+    {
+        $this->template->content = View::forge('working');
     }
 }

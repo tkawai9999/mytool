@@ -14,7 +14,7 @@
     <!-- Bootstrap core CSS -->
     <?php echo Asset::css(array('bootstrap.min.css','bootstrap-custom.css')); ?>
     <?php echo Asset::js(array('jquery-2.1.4.min.js','bootstrap2.min.js','mytool.js'));?>
-    <?php echo Asset::css('dashboard.css'); ?>
+    <?php echo Asset::css(array('dashboard.css','signin.css')); ?>
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -33,12 +33,32 @@
             <li class="<?php if(isset($menu_todo)) echo $menu_todo?>">
               <?php echo Html::anchor('todolist/','Todo');?>
             </li>
-            <li class=""><a href="#">ブックマーク</a></li>
-            <li><a href="#">ノート</a></li>
+            <li class="">
+              <?php echo Html::anchor('todolist/working','ブックマーク');?>
+            </li>
+            <li class="">
+              <?php echo Html::anchor('todolist/working','ノート');?>
+            </li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
+          <?php  if (Auth::check()):?>
+            <form class="navbar-form navbar-right">
+              <li class="dropdown nav navbar-nav">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" 
+                role="button" aria-haspopup="true" aria-expanded="false">
+                <?php echo Auth::get_screen_name();?>
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><?php echo Html::anchor('users/logout','ログアウト');?></li>
+                  <li><?php echo Html::anchor('users/changePasswdInit','パスワード変更');?></li>
+                  <?php  if (Auth::member(100)):?>
+                    <li>
+                      <?php echo Html::anchor('todolist/working','ユーザ管理');?>
+                    </li>
+                  <?php endif;?>
+                </ul>
+              </li>
+            </form>
+          <?php endif;?>
         </div>
       </div><!-- .container -->
     </nav>

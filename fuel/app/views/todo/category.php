@@ -52,11 +52,12 @@
         </p>
         <div class="form-group">
           <div class="col-sm-12">
-          <select id="category_list"  size="15" class="form-control" onClick="selectCategory()">
+          <ul class="list-group category" >
             <?php foreach ($categories as $category ): ?>
-              <option value='<?php echo $category->id?>'><?php echo $category->name?></option>
+              <a class="list-group-item" onClick="selectCategory('<?php echo $category->id?>','<?php echo $category->name?>')">
+                <?php echo $category->name?></a>
             <?php endforeach; ?>
-         </select>
+          </ul>
         </div> <!--col-sm -->
         </div> <!--form-group -->
         <input type="hidden" name="category_id"  id='category_id' value="" >
