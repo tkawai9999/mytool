@@ -21,7 +21,7 @@ class Create_todos
 			'sort_no' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'delf' => array('constraint' => 11, 'type' => 'int'),
             'created_at' =>  array('type' => 'datetime'),
-            'updated_at' =>  array('type' => 'datetime'),
+            'updated_at' =>  array('type' => 'datetime', 'null' => true),
 
 		), array('id'));
 	}

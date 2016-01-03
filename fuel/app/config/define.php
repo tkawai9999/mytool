@@ -9,4 +9,8 @@ return array(
     'hold' => 3,
     'finished' => 4
   ),
+  "repeat_flag" => array(
+    'yes' => '1',
+    'no' => '0',
+  ),
 );
