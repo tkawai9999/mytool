@@ -603,7 +603,7 @@ class Test_Model_Todo extends \TestCase
         $todo->saveData();
     }
 
-   /**
+    /**
      * 正常：更新（繰り返し保存：１日単位、終了日を過ぎた)
      * @test
      */
@@ -630,6 +630,192 @@ class Test_Model_Todo extends \TestCase
     public function deleteData_ng1(){
         $id='99999';
         Model_Todo::deleteData($id);
+    }
+
+    /**
+     * 正常：必須項目のみ設定
+     * @test
+     */
+    public function validData_ok1(){
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $todo->setData($work);
+        $rc=$todo->validData();
+        $this->assertTrue($rc);
+
+    }
+
+    /**
+     * 正常：全項目設定
+     * @test
+     */
+    public function validData_ok2(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['start_y']='2016';
+        $work['start_m']='12';
+        $work['start_d']='31';
+        $work['start_h']='00';
+        $work['start_mi']='01';
+        $work['end_y']='2016';
+        $work['end_m']='1';
+        $work['end_d']='4';
+        $work['end_h']='10';
+        $work['end_mi']='00';
+        $work['repeat_flag']='1';
+        $work['repeat_interval']='3';
+        $work['repeat_unit_id']='2';
+
+        $todo->setData($work);
+        $rc=$todo->validData();
+        $this->assertTrue($rc);
+
+    }
+    /**
+     * 異常：タスク（必須）
+     * @test
+     */
+    public function validData_ng_name1(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['name']='';
+        $todo->setData($work);
+        $rc=$todo->validData();
+        $this->assertFalse($rc);
+        $this->assertEquals( $todo->getMessage(),"タスクが入力されていません。");
+    }
+    /**
+     * 異常：タスク（上限）
+     * @test
+     */
+    public function validData_ng_name2(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['name']='1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456';
+        $todo->setData($work);
+        $rc=$todo->validData();
+        $this->assertFalse($rc);
+        $this->assertEquals(  $todo->getMessage(),"タスクが255文字を超えています。");
+    }
+
+    /**
+     * 異常：開始（日付不正１）
+     * @test
+     */
+    public function validData_ng_start1(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['start_y']='2016';
+        $work['start_m']='13';
+        $work['start_d']='31';
+        $work['start_h']='00';
+        $work['start_mi']='01';
+        $todo->setData($work);
+        $rc=$todo->validData();
+        $this->assertFalse($rc);
+        $this->assertEquals( "開始の日付書式が不正です。",$todo->getMessage());
+    }
+
+
+    /**
+     * 異常：終了（日付不正１）
+     * @test
+     */
+    public function validData_ng_end1(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['end_y']='2016';
+        $work['end_m']='13';
+        $work['end_d']='31';
+        $work['end_h']='00';
+        $work['end_mi']='01';
+        $todo->setData($work);
+        $rc=$todo->validData();
+        $this->assertFalse($rc);
+        $this->assertEquals( "終了の日付書式が不正です。",$todo->getMessage());
+    }
+
+    /**
+     * 異常：繰り返し間隔（必須）
+     * @test
+     */
+    public function validData_ng_repeat1(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['repeat_flag']='1';
+        $work['repeat_interval']='';
+        $work['repeat_unit_id']='2';
+        $todo->setData($work);
+        $rc=$todo->validData();
+        $this->assertFalse($rc);
+        $this->assertEquals( $todo->getMessage(),"繰り返し間隔が入力されていません。");
+    }
+
+    /**
+     * 異常：繰り返し間隔（数値）
+     * @test
+     */
+    public function validData_ng_repeat2(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['repeat_flag']='1';
+        $work['repeat_interval']='a';
+        $work['repeat_unit_id']='2';
+        $todo->setData($work);
+        $rc=$todo->validData();
+        $this->assertFalse($rc);
+        $this->assertEquals( $todo->getMessage(),"繰り返し間隔の書式が不正です。");
+    }
+
+    /**
+     * 異常：繰り返し単位 (例外エラー)
+     * @expectedException Exception
+     * @test
+     */
+    public function validData_ng_repeat3(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['repeat_flag']='1';
+        $work['repeat_interval']='1';
+        $work['repeat_unit_id']='a';
+        $todo->setData($work);
+        $rc=$todo->validData();
+    }
+
+    /**
+     * 異常：ステータス (例外エラー)
+     * @expectedException Exception
+     * @test
+     */
+    public function validData_ng_status1(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['status_id']='a';
+        $todo->setData($work);
+        $rc=$todo->validData();
+    }
+
+    /**
+     * 異常：カテゴリ (例外エラー)
+     * @expectedException Exception
+     * @test
+     */
+    public function validData_ng_category1(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['category_id']='a';
+        $todo->setData($work);
+        $rc=$todo->validData();
     }
 }
 

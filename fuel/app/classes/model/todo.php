@@ -255,7 +255,7 @@ class Model_Todo extends \Orm\Model
         if (count($status)==0 )
         {
             $msg="対象statusなし。status_id=$status_id";
-            Log::error($msg);
+            Log::error($msg.":".__FILE__.":".__LINE__);
             throw new Exception($msg);
         }
 
@@ -352,45 +352,6 @@ class Model_Todo extends \Orm\Model
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $this->_save_data=$data;
-        Log::debug("END ".__CLASS__.":".__FUNCTION__);
-    }
-
-    /**
-     * エラーメッセージの取得（Iエラーの場合）
-     *
-     * @param なし
-     * @return string エラーメッセージ
-     */
-    public function getMessage ()
-    {
-        Log::debug("START ".__CLASS__.":".__FUNCTION__);
-        return $this->_message;
-        Log::debug("END ".__CLASS__.":".__FUNCTION__);
-    }
-
-    /**
-     * 登録データをチェックする
-     *
-     * @param $data 登録対象のデータ
-     * @return boolean true:正常 false:異常
-     */
-    public function validData ()
-    {
-        Log::debug("START ".__CLASS__.":".__FUNCTION__);
-        $this->_message='aaa';
-
-        Log::debug("END ".__CLASS__.":".__FUNCTION__);
-        return true;
-    }
-    /**
-     * データを保存する
-     *
-     * @param なし
-     * @return なし
-     */
-    public function saveData()
-    {
-        Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
         //開始日、終了日の設定
         $this->_save_data['start_date']="";
@@ -416,6 +377,97 @@ class Model_Todo extends \Orm\Model
                     $this->_save_data['end_h'],
                     $this->_save_data['end_mi']);
         }
+
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+    }
+
+    /**
+     * エラーメッセージの取得（Iエラーの場合）
+     *
+     * @param なし
+     * @return string エラーメッセージ
+     */
+    public function getMessage ()
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+        return $this->_message;
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+    }
+
+    /**
+     * 登録データをチェックする
+     *
+     * @param $data 登録対象のデータ
+     * @return boolean true:正常 false:異常
+     */
+    public function validData ()
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+
+        $val = Validation::forge();
+
+        $val->add('name', 'タスク')
+            ->add_rule('required')
+            ->add_rule('max_length',255);
+        $val->add('start_date', '開始')
+            ->add_rule('valid_date','Y-m-d H:i:s'); //改良が必要
+        $val->add('end_date', '終了')
+            ->add_rule('valid_date','Y-m-d H:i:s'); //改良が必要
+
+        if ( $this->_save_data['repeat_flag'] =='1')
+        {
+            $val->add('repeat_interval', '繰り返し間隔')
+                ->add_rule('required')
+                ->add_rule('valid_string','numeric');
+
+            if ( $this->_save_data['repeat_unit_id'] =='' ||
+                  !is_numeric( $this->_save_data['repeat_unit_id']))
+            {
+                $msg="repeat_unit_id不正=".$this->_save_data['repeat_unit_id'];
+                Log::error($msg.":".__FILE__.":".__LINE__);
+                throw new Exception($msg);
+            }
+        }
+
+        if ( $this->_save_data['status_id'] =='' ||
+              !is_numeric( $this->_save_data['status_id']))
+        {
+            $msg="status_id不正=".$this->_save_data['status_id'];
+            Log::error($msg.":".__FILE__.":".__LINE__);
+            throw new Exception($msg);
+        }
+        if ( $this->_save_data['category_id'] =='' ||
+              !is_numeric( $this->_save_data['category_id']))
+        {
+            $msg="category_id不正=".$this->_save_data['category_id'];
+            Log::error($msg.":".__FILE__.":".__LINE__);
+            throw new Exception($msg);
+        }
+
+        //実行
+        if (!$val->run($this->_save_data))
+        {
+            $errors = $val->error();
+            foreach ($errors as $error)
+            {
+                //先頭１個だけ返す
+                $this->_message = $error;
+                break;
+            }
+            return false;
+        }
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+        return true;
+    }
+    /**
+     * データを保存する
+     *
+     * @param なし
+     * @return なし
+     */
+    public function saveData()
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
         //終了日（直近）の設定
         if ( $this->_save_data['repeat_flag'] == 
@@ -466,7 +518,7 @@ class Model_Todo extends \Orm\Model
             if(!isset($todo))
             {
                 $msg="todo_idなし:".$this->_save_data['todo_id'];
-                Log::error($msg);
+                Log::error($msg.":".__FILE__.":".__LINE__);
                 throw new Exception($msg);
             } 
             $todo->set($work);
@@ -504,7 +556,7 @@ class Model_Todo extends \Orm\Model
         if(!isset($todo))
         {
             $msg="todo_idなし:".$id;
-            Log::error($msg);
+            Log::error($msg.":".__FILE__.":".__LINE__);
             throw new Exception($msg);
         } 
         $todo->delete();
