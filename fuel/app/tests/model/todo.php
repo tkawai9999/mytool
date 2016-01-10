@@ -50,7 +50,7 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function getListDuring_ok1(){
-        $list=Model_Todo::getListDuring();
+        $list=Model_Todo::getListDuring(5);
         $this->assertCount(4, $list);
     }
     /**
@@ -58,7 +58,7 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function getListUntreatDeadLineYes_ok1(){
-        $list=Model_Todo::getListUntreatDeadLineYes();
+        $list=Model_Todo::getListUntreatDeadLineYes(5);
         $this->assertCount(5, $list);
     }
     /**
@@ -66,7 +66,7 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function getListUntreatDeadLineNo_ok1(){
-        $list=Model_Todo::getListUntreatDeadLineNo();
+        $list=Model_Todo::getListUntreatDeadLineNo(5);
         $this->assertCount(2, $list);
     }
     /**
@@ -74,7 +74,7 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function getListHold_ok1(){
-        $list=Model_Todo::getListHold();
+        $list=Model_Todo::getListHold(5);
         $this->assertCount(1, $list);
     }
 
@@ -83,7 +83,7 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function getListFinished_ok1(){
-        $list=Model_Todo::getListFinished();
+        $list=Model_Todo::getListFinished(5);
         $this->assertCount(1, $list);
     }
 
@@ -93,7 +93,7 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function getListCategory_ok1(){
-        $list=Model_Todo::getListCategory(1);
+        $list=Model_Todo::getListCategory(1,5);
         $this->assertCount(4, $list);
     }
     /**
@@ -101,7 +101,7 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function getListCategory_ok2(){
-        $list=Model_Todo::getListCategory(3);
+        $list=Model_Todo::getListCategory(3,5);
         $this->assertCount(2, $list);
     }
     /**
@@ -109,7 +109,7 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function getListCategory_ok3(){
-        $list=Model_Todo::getListCategory(9);
+        $list=Model_Todo::getListCategory(9,5);
         $this->assertCount(0, $list);
     }
 
@@ -118,7 +118,7 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function getCategoryCnt_ok1(){
-        $list=Model_Todo::getCategoryCnt();
+        $list=Model_Todo::getCategoryCnt(5);
         foreach ( $list as $rec)
         {
             if ( $rec['id']==1) $this->assertEquals($rec['cnt'], 4);
@@ -134,16 +134,17 @@ class Test_Model_Todo extends \TestCase
     public function updateStatus_ok1(){
         $todo_id=1;
         $status_id=2;
-        $rc=Model_Todo::updateStatus($todo_id,$status_id);
+        $rc=Model_Todo::updateStatus($todo_id,$status_id,5);
         $this->assertTrue($rc);
         $info=Model_Todo::find($todo_id);
-        $this->assertEquals($info['status_id'], $status_id);
+        $this->assertEquals($info['status_id'], $status_id,5);
 
         $status_id=3;
-        $rc=Model_Todo::updateStatus($todo_id,$status_id);
+        $rc=Model_Todo::updateStatus($todo_id,$status_id,7);
         $this->assertTrue($rc);
         $info=Model_Todo::find($todo_id);
         $this->assertEquals($info['status_id'], $status_id);
+        $this->assertEquals($info['uid'], 7);
 
     }
 
@@ -155,7 +156,7 @@ class Test_Model_Todo extends \TestCase
     public function updateStatus_ng1(){
         $todo_id=10000;
         $status_id=1;
-        $rc=Model_Todo::updateStatus($todo_id,$status_id);
+        $rc=Model_Todo::updateStatus($todo_id,$status_id,5);
     }
     /**
      * 異常：ステータスid不正
@@ -165,7 +166,7 @@ class Test_Model_Todo extends \TestCase
     public function updateStatus_ng2(){
         $todo_id=1;
         $status_id='a';
-        $rc=Model_Todo::updateStatus($todo_id,$status_id);
+        $rc=Model_Todo::updateStatus($todo_id,$status_id,5);
     }
 
 
@@ -245,7 +246,7 @@ class Test_Model_Todo extends \TestCase
      */
     public function saveData_ok1(){
         $todo = new Model_Todo();
-        $todo->setData($this->_entry_data);
+        $todo->setData($this->_entry_data,5);
         $todo->saveData();
         
         $data=$todo->getData();
@@ -278,7 +279,7 @@ class Test_Model_Todo extends \TestCase
 //        $work['end_date_real'] = '2016/12/31 23:59:00';
 
         $todo = new Model_Todo();
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
         $data=$todo->getData();
         $this->assertArrayHasKey('todo_id', $data);
@@ -317,7 +318,7 @@ class Test_Model_Todo extends \TestCase
         $work['status_id'] = '2';
 
         $todo = new Model_Todo();
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
         $data=$todo->getData();
         $this->assertArrayHasKey('todo_id', $data);
@@ -345,7 +346,7 @@ class Test_Model_Todo extends \TestCase
         $work['status_id'] = '1';
 
         $todo = new Model_Todo();
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
         $data=$todo->getData();
         $this->assertArrayHasKey('todo_id', $data);
@@ -361,7 +362,7 @@ class Test_Model_Todo extends \TestCase
     public function saveData_ok5(){
         $todo = new Model_Todo();
         $work=$this->_entry_data;
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
         $data=$todo->getData();
         $this->assertArrayHasKey('todo_id', $data);
@@ -383,7 +384,7 @@ class Test_Model_Todo extends \TestCase
         $data['status_id']='3';
         $data['category_id']='3';
         $data['note']='entry2';
-        $todo->setData($data);
+        $todo->setData($data,5);
         $todo->saveData();
         $data=$todo->getData();
         $result=Model_Todo::getPk($data['todo_id']);
@@ -427,14 +428,14 @@ class Test_Model_Todo extends \TestCase
         $work['repeat_unit_id']='1';
         $work['status_id']='2';
 
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
         $data=$todo->getData();
         $this->assertArrayHasKey('todo_id', $data);
         $this->assertEquals($data['end_date_real'],'2016-01-03 10:00:00');
 
         $data['status_id']='4';
-        $todo->setData($data);
+        $todo->setData($data,5);
         $todo->saveData();
         $data=$todo->getData();
         $result=Model_Todo::getPk($data['todo_id']);
@@ -459,14 +460,14 @@ class Test_Model_Todo extends \TestCase
         $work['repeat_unit_id']='2';
         $work['status_id']='1';
 
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
         $data=$todo->getData();
         $this->assertArrayHasKey('todo_id', $data);
         $this->assertEquals($data['end_date_real'],'2016-01-03 10:00:00');
 
         $data['status_id']='4';
-        $todo->setData($data);
+        $todo->setData($data,5);
         $todo->saveData();
         $data=$todo->getData();
         $result=Model_Todo::getPk($data['todo_id']);
@@ -491,14 +492,14 @@ class Test_Model_Todo extends \TestCase
         $work['repeat_unit_id']='3';
         $work['status_id']='1';
 
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
         $data=$todo->getData();
         $this->assertArrayHasKey('todo_id', $data);
         $this->assertEquals($data['end_date_real'],'2016-01-03 10:00:00');
 
         $data['status_id']='4';
-        $todo->setData($data);
+        $todo->setData($data,5);
         $todo->saveData();
         $data=$todo->getData();
         $result=Model_Todo::getPk($data['todo_id']);
@@ -523,14 +524,14 @@ class Test_Model_Todo extends \TestCase
         $work['repeat_unit_id']='4';
         $work['status_id']='1';
 
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
         $data=$todo->getData();
         $this->assertArrayHasKey('todo_id', $data);
         $this->assertEquals($data['end_date_real'],'2016-01-03 10:00:00');
 
         $data['status_id']='4';
-        $todo->setData($data);
+        $todo->setData($data,5);
         $todo->saveData();
         $data=$todo->getData();
         $result=Model_Todo::getPk($data['todo_id']);
@@ -561,14 +562,14 @@ class Test_Model_Todo extends \TestCase
         $work['repeat_unit_id']='1';
         $work['status_id']='1';
 
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
         $data=$todo->getData();
         $this->assertArrayHasKey('todo_id', $data);
         $this->assertEquals($data['end_date_real'],'2016-01-02 10:00:00');
 
         $data['status_id']='4';
-        $todo->setData($data);
+        $todo->setData($data,5);
         $todo->saveData();
         $data=$todo->getData();
         $result=Model_Todo::getPk($data['todo_id']);
@@ -586,7 +587,7 @@ class Test_Model_Todo extends \TestCase
         $todo = new Model_Todo();
         $work=$this->_entry_data;
         $work['status_id']='aaa';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
     }
 
@@ -599,7 +600,7 @@ class Test_Model_Todo extends \TestCase
         $todo = new Model_Todo();
         $work=$this->_entry_data;
         $work['todo_id']='99999';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $todo->saveData();
     }
 
@@ -609,7 +610,7 @@ class Test_Model_Todo extends \TestCase
      */
     public function deleteData_ok1(){
         $todo = new Model_Todo();
-        $todo->setData($this->_entry_data);
+        $todo->setData($this->_entry_data,5);
         $todo->saveData();
 
         $data=$todo->getData();
@@ -617,7 +618,7 @@ class Test_Model_Todo extends \TestCase
         $result=Model_Todo::getPk($data['todo_id']);
         $this->assertEquals($result['name'],$this->_entry_data['name']);
         
-        Model_Todo::deleteData($data['todo_id']);
+        Model_Todo::deleteData($data['todo_id'],5);
         $result=Model_Todo::getPk($data['todo_id']);
         $this->assertCount(0,$result);
     }
@@ -637,9 +638,10 @@ class Test_Model_Todo extends \TestCase
      * @test
      */
     public function validData_ok1(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
         $todo = new Model_Todo();
         $work=$this->_entry_data;
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
         $this->assertTrue($rc);
 
@@ -667,7 +669,7 @@ class Test_Model_Todo extends \TestCase
         $work['repeat_interval']='3';
         $work['repeat_unit_id']='2';
 
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
         $this->assertTrue($rc);
 
@@ -681,7 +683,7 @@ class Test_Model_Todo extends \TestCase
         $todo = new Model_Todo();
         $work=$this->_entry_data;
         $work['name']='';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
         $this->assertFalse($rc);
         $this->assertEquals( $todo->getMessage(),"タスクが入力されていません。");
@@ -695,7 +697,7 @@ class Test_Model_Todo extends \TestCase
         $todo = new Model_Todo();
         $work=$this->_entry_data;
         $work['name']='1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
         $this->assertFalse($rc);
         $this->assertEquals(  $todo->getMessage(),"タスクが255文字を超えています。");
@@ -714,10 +716,10 @@ class Test_Model_Todo extends \TestCase
         $work['start_d']='31';
         $work['start_h']='00';
         $work['start_mi']='01';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
         $this->assertFalse($rc);
-        $this->assertEquals( "開始の日付書式が不正です。",$todo->getMessage());
+        $this->assertEquals( "開始の日時の書式が不正です。",$todo->getMessage());
     }
 
 
@@ -734,10 +736,10 @@ class Test_Model_Todo extends \TestCase
         $work['end_d']='31';
         $work['end_h']='00';
         $work['end_mi']='01';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
         $this->assertFalse($rc);
-        $this->assertEquals( "終了の日付書式が不正です。",$todo->getMessage());
+        $this->assertEquals( "終了の日時の書式が不正です。",$todo->getMessage());
     }
 
     /**
@@ -751,7 +753,7 @@ class Test_Model_Todo extends \TestCase
         $work['repeat_flag']='1';
         $work['repeat_interval']='';
         $work['repeat_unit_id']='2';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
         $this->assertFalse($rc);
         $this->assertEquals( $todo->getMessage(),"繰り返し間隔が入力されていません。");
@@ -768,7 +770,7 @@ class Test_Model_Todo extends \TestCase
         $work['repeat_flag']='1';
         $work['repeat_interval']='a';
         $work['repeat_unit_id']='2';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
         $this->assertFalse($rc);
         $this->assertEquals( $todo->getMessage(),"繰り返し間隔の書式が不正です。");
@@ -786,7 +788,7 @@ class Test_Model_Todo extends \TestCase
         $work['repeat_flag']='1';
         $work['repeat_interval']='1';
         $work['repeat_unit_id']='a';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
     }
 
@@ -800,7 +802,7 @@ class Test_Model_Todo extends \TestCase
         $todo = new Model_Todo();
         $work=$this->_entry_data;
         $work['status_id']='a';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
     }
 
@@ -814,8 +816,22 @@ class Test_Model_Todo extends \TestCase
         $todo = new Model_Todo();
         $work=$this->_entry_data;
         $work['category_id']='a';
-        $todo->setData($work);
+        $todo->setData($work,5);
         $rc=$todo->validData();
     }
+
+   /**
+     * 異常：UID (例外エラー1)
+     * @expectedException Exception
+     * @test
+     */
+    public function validData_ng_uid1(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $todo->setData($work,'');
+        $rc=$todo->validData();
+    }
+
 }
 

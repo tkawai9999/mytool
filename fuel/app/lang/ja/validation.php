@@ -18,4 +18,7 @@ return array(
 	'valid_string'    => ':labelの書式が不正です。',
 	'required_with'   => 'The field :label must contain a value if :param:1 contains a value.',
 	'valid_date'      => ':labelの日付書式が不正です。',
+	'valid_datetime'      => ':labelの日時の書式が不正です。',
+	'last_category'      => 'カテゴリが一つしないため削除できません。',
+	'category_todo_setting'      => 'todoに設定されているため削除できません。',
 );

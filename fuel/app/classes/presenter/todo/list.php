@@ -9,17 +9,23 @@ class Presenter_Todo_List extends Presenter
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
+        //ログインID取得
+        $login_user=Auth::get_user_id();
+        $uid=$login_user[1];
+
         //バッチ情報
-        $this->cnt_during = count(Model_Todo::getListDuring());
-        $this->cnt_untreat1 = count(Model_Todo::getListUntreatDeadLineYes());
-        $this->cnt_untreat2 = count(Model_Todo::getListUntreatDeadLineNo());
-        $this->cnt_hold = count(Model_Todo::getListHold());
+        $this->cnt_during = count(Model_Todo::getListDuring($uid));
+        $this->cnt_untreat1 = 
+            count(Model_Todo::getListUntreatDeadLineYes($uid));
+        $this->cnt_untreat2 = 
+            count(Model_Todo::getListUntreatDeadLineNo($uid));
+        $this->cnt_hold = count(Model_Todo::getListHold($uid));
 
         //カテゴリ一覧取得
         $active_categroy_id="";
         if(isset($this->_view->category_id)) 
                 $active_categroy_id=$this->_view->category_id;
-        $this->categories = $this->_getCategoryList($active_categroy_id);
+        $this->categories = $this->_getCategoryList($active_categroy_id, $uid);
 
         //ステータス一覧取得
         $this->statuses =  Model_Status::getListAll();
@@ -36,6 +42,8 @@ class Presenter_Todo_List extends Presenter
         }
         $this->todos = $list;
 
+
+
         Log::debug("END ".__CLASS__.":".__FUNCTION__);
     }
 
@@ -43,16 +51,17 @@ class Presenter_Todo_List extends Presenter
      * Side表示用のカテゴリ一覧取得
      *
      * @param  int $active_categroy_id 選択されたカテゴリID
+     * @param  int $uid ログインユーザID
      * @return array カテゴリ一覧
      */
-    private function _getCategoryList($active_categroy_id)
+    private function _getCategoryList($active_categroy_id, $uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
         //カテゴリ一覧取得
-        $category_info = Model_Category::getListAll();
+        $category_info = Model_Category::getListAll($uid);
         //Todoに設定されたカテゴリ情報取得
-        $todo_category_cnt = Model_Todo::getCategoryCnt();
+        $todo_category_cnt = Model_Todo::getCategoryCnt($uid);
         //カテゴリ一覧編集
         $list=array();
         foreach ( $category_info as $rec )

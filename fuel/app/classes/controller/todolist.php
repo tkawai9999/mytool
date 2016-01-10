@@ -1,6 +1,7 @@
 <?php
 class Controller_TodoList extends Controller_Template
 {
+    private $_uid;
     /**
      * 前処理
      *
@@ -22,6 +23,9 @@ class Controller_TodoList extends Controller_Template
         {
             Response::redirect('/users/');
         }
+        //ログインID取得
+        $login_user=Auth::get_user_id();
+        $this->_uid=$login_user[1];
 
     }
 
@@ -58,7 +62,7 @@ class Controller_TodoList extends Controller_Template
             //Todo一覧作成
             $data['side_during'] =  "active";
             $data['page_name'] =  "対応中";
-            $data['todos'] = Model_Todo::getListDuring();
+            $data['todos'] = Model_Todo::getListDuring($this->_uid);
 
             $view= View::forge('todo/list',$data);
             $this->template->content = 
@@ -84,7 +88,7 @@ class Controller_TodoList extends Controller_Template
             //Todo一覧作成
             $data['side_untreat1'] =  "active";
             $data['page_name'] =  "未(期限有）";
-            $data['todos'] = Model_Todo::getListUntreatDeadLineYes();
+            $data['todos'] = Model_Todo::getListUntreatDeadLineYes($this->_uid);
 
             $view= View::forge('todo/list',$data);
             $this->template->content = 
@@ -110,7 +114,7 @@ class Controller_TodoList extends Controller_Template
             //Todo一覧作成
             $data['side_untreat2'] =  "active";
             $data['page_name'] =  "未(期限無）";
-            $data['todos'] = Model_Todo::getListUntreatDeadLineNo();
+            $data['todos'] = Model_Todo::getListUntreatDeadLineNo($this->_uid);
 
             $view= View::forge('todo/list',$data);
             $this->template->content = 
@@ -136,7 +140,7 @@ class Controller_TodoList extends Controller_Template
             //Todo一覧作成
             $data['side_hold'] =  "active";
             $data['page_name'] =  "保留";
-            $data['todos'] = Model_Todo::getListHold();
+            $data['todos'] = Model_Todo::getListHold($this->_uid);
 
             $view= View::forge('todo/list',$data);
             $this->template->content = 
@@ -162,7 +166,7 @@ class Controller_TodoList extends Controller_Template
             //Todo一覧作成
             $data['side_finished'] =  "active";
             $data['page_name'] =  "完了";
-            $data['todos'] = Model_Todo::getListFinished();
+            $data['todos'] = Model_Todo::getListFinished($this->_uid);
 
             $view= View::forge('todo/list',$data);
             $this->template->content = 
@@ -186,7 +190,8 @@ class Controller_TodoList extends Controller_Template
             $data=Input::all();
 
             //Todo一覧作成
-            $data['todos'] = Model_Todo::getListCategory($data['category_id']);
+            $data['todos'] = Model_Todo::getListCategory(
+                               $data['category_id'],$this->_uid);
 
             $view= View::forge('todo/list',$data);
             $this->template->content =
@@ -214,7 +219,8 @@ class Controller_TodoList extends Controller_Template
             $refer=$data['refer'];
 
             //ステータス更新
-            $data['todos'] = Model_Todo::updateStatus($todo_id, $status_id);
+            $data['todos'] = Model_Todo::updateStatus($todo_id, 
+                $status_id, $this->_uid);
 
             Response::redirect($refer);
         }

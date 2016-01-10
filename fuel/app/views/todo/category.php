@@ -8,7 +8,6 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="./favicon.ico">
 
     <title>MyTool!</title>
 
@@ -25,13 +24,13 @@
       <h4 class="modal-title">カテゴリ編集</h4>
     </div><!-- /modal-header -->
     <div class="modal-body">
-      <form class="form-horizontal" id='form' name='fm' role="form">
+      <form class="form-horizontal" id='fm' name='fm' role="form">
         <div class="form-group">
           <div class="col-sm-12">
             <label for="category" class=" control-label">名称</label>
           </div>
           <div class="col-sm-12">
-            <input type="category" class="form-control" name="category_name" id='category_name' value="">
+            <input type="text" class="form-control" name="name" id='name' value="">
           </div>
         </div>
         <p class="text-right">
@@ -44,10 +43,10 @@
           <button type="button" class="btn btn-success" 
                onClick="clearCategory()">クリア</button>&nbsp;&nbsp;
           <button type="button" class="btn btn-danger" data-dismiss="modal"
-              onClick="actionCategory('/mytool/categoryedit/delete')">
+              onClick="actionCategory('/mytool/categoryedit/delete','1')">
               削除</button>&nbsp;&nbsp;
-          <button type="button" class="btn btn-primary" data-dismiss="modal" 
-              onClick="actionCategory('/mytool/categoryedit/save')">
+          <button type="button" class="btn btn-primary"  
+              onClick="actionCategory('/mytool/categoryedit/save','0')">
               保存</button>
         </p>
         <div class="form-group">
@@ -61,7 +60,8 @@
         </div> <!--col-sm -->
         </div> <!--form-group -->
         <input type="hidden" name="category_id"  id='category_id' value="" >
-        <input type="hidden" name="refer"  value="<?php echo $refer?>" >
+        <input type="hidden" name="delf"  id='delf' value="" >
+        <input type="hidden" name="refer" id="refer" value="<?php echo $refer?>" >
       </form>
     </div><!-- /modal-body -->
   </body>

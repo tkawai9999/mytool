@@ -17,6 +17,7 @@ class Model_Todo extends \Orm\Model
 		'category_id',
 		'note',
 		'sort_no',
+		'uid',
 		'delf',
 		'created_at',
 		'updated_at',
@@ -61,14 +62,15 @@ class Model_Todo extends \Orm\Model
     /**
      * ToDo一覧取得（対応中）
      *
-     * @param なし
+     * @param $uid ログインユーザID
      * @return array ToDo一覧
      */
-    public static function getListDuring()
+    public static function getListDuring($uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $all = static::find('all', array(
-            'where' => array( array('delf', 0),),
+            'where' => array( array('delf', 0),
+              array('uid', $uid), ),
             'order_by' => array('end_date' => 'asc'),
         ));
         Log::debug(DB::last_query());
@@ -96,14 +98,15 @@ class Model_Todo extends \Orm\Model
     /**
      * ToDo一覧取得（未-期限あり）
      *
-     * @param なし
+     * @param $uid ログインユーザID
      * @return array ToDo一覧
      */
-    public static function getListUntreatDeadLineYes()
+    public static function getListUntreatDeadLineYes($uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $all = static::find('all', array(
             'where' => array( array('delf', 0),
+              array('uid', $uid), 
               array('status_id', Config::get('define.statuses_id.untreated')),),
             'order_by' => array('end_date' => 'asc'),
         ));
@@ -121,14 +124,15 @@ class Model_Todo extends \Orm\Model
     /**
      * ToDo一覧取得（未-期限なし）
      *
-     * @param なし
+     * @param $uid ログインユーザID
      * @return array ToDo一覧
      */
-    public static function getListUntreatDeadLineNo()
+    public static function getListUntreatDeadLineNo($uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $all = static::find('all', array(
             'where' => array( array('delf', 0),
+              array('uid', $uid), 
               array('status_id', Config::get('define.statuses_id.untreated')),),
             'order_by' => array('sort_no' => 'asc'),
         ));
@@ -146,15 +150,16 @@ class Model_Todo extends \Orm\Model
     /**
      * ToDo一覧取得（保留）
      *
-     * @param なし
+     * @param $uid ログインユーザID
      * @return array ToDo一覧
      */
-    public static function getListHold()
+    public static function getListHold($uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $list = static::find('all', array(
             'where' => array( array('delf', 0),
-                  array('status_id', Config::get('define.statuses_id.hold')),),
+              array('uid', $uid), 
+              array('status_id', Config::get('define.statuses_id.hold')),),
             'order_by' => array('sort_no' => 'asc'),
         ));
         Log::debug(DB::last_query());
@@ -165,15 +170,16 @@ class Model_Todo extends \Orm\Model
     /**
      * ToDo一覧取得（完了）
      *
-     * @param なし
+     * @param $uid ログインユーザID
      * @return array ToDo一覧
      */
-    public static function getListFinished()
+    public static function getListFinished($uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $list = static::find('all', array(
             'where' => array( array('delf', 0),
-               array('status_id', Config::get('define.statuses_id.finished')),),
+              array('uid', $uid), 
+              array('status_id', Config::get('define.statuses_id.finished')),),
             'order_by' => array('sort_no' => 'asc'),
         ));
         Log::debug(DB::last_query());
@@ -184,15 +190,18 @@ class Model_Todo extends \Orm\Model
    /**
      * ToDo一覧取得（カテゴリ）
      *
+     * @param $uid ログインユーザID
      * @param $category_id カテゴリID
      * @return array ToDo一覧
      */
-    public static function getListCategory($category_id)
+    public static function getListCategory($category_id,$uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $list = static::find('all', array(
-            'where' => array( array('delf', 0),
-                       array('category_id', $category_id),),
+            'where' => array( 
+              array('delf', 0),
+              array('uid', $uid), 
+              array('category_id', $category_id),),
             'order_by' => array('sort_no' => 'asc'),
         ));
         Log::debug(DB::last_query());
@@ -203,15 +212,16 @@ class Model_Todo extends \Orm\Model
     /**
      * Todo設定済のカテゴリ件数を取得
      *
-     * @param なし
+     * @param $uid ログインユーザID
      * @return array カテゴリ件数一覧
      */
-    public static function getCategoryCnt()
+    public static function getCategoryCnt($uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
         $all = static::find('all', array(
-            'where' => array( array('delf', 0),),
+            'where' => array( array('delf', 0),
+              array('uid', $uid),),
             'order_by' => array('sort_no' => 'asc'),
         ));
         Log::debug(DB::last_query());
@@ -244,9 +254,10 @@ class Model_Todo extends \Orm\Model
      *
      * @param $todo_id 対象のtodo_id
      * @param $status_id 対象のstatus_id
+     * @param $uid ログインユーザID
      * @return true:正常  false:異常
      */
-    public static function updateStatus($todo_id, $status_id)
+    public static function updateStatus($todo_id, $status_id,$uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
@@ -270,6 +281,7 @@ class Model_Todo extends \Orm\Model
 
         //更新
         $todo['status_id'] = $status_id;
+        $todo['uid'] = $uid;
         $todo->save();
         Log::debug(DB::last_query());
 
@@ -346,12 +358,16 @@ class Model_Todo extends \Orm\Model
      * 登録データをセットする
      *
      * @param $data 登録対象のデータ
+     * @param $uid  ログインユーザID
      * @return なし
      */
-    public function setData($data)
+    public function setData($data, $uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $this->_save_data=$data;
+
+        //ユーザID
+        $this->_save_data['uid']=$uid;
 
         //開始日、終了日の設定
         $this->_save_data['start_date']="";
@@ -397,7 +413,7 @@ class Model_Todo extends \Orm\Model
     /**
      * 登録データをチェックする
      *
-     * @param $data 登録対象のデータ
+     * @param $なし
      * @return boolean true:正常 false:異常
      */
     public function validData ()
@@ -405,14 +421,16 @@ class Model_Todo extends \Orm\Model
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
         $val = Validation::forge();
+        $val->add_callable('Model_ValidCustom');
 
+        //チェック定義&例外エラー対応
         $val->add('name', 'タスク')
             ->add_rule('required')
             ->add_rule('max_length',255);
         $val->add('start_date', '開始')
-            ->add_rule('valid_date','Y-m-d H:i:s'); //改良が必要
+            ->add_rule('valid_datetime');
         $val->add('end_date', '終了')
-            ->add_rule('valid_date','Y-m-d H:i:s'); //改良が必要
+            ->add_rule('valid_datetime');
 
         if ( $this->_save_data['repeat_flag'] =='1')
         {
@@ -443,6 +461,13 @@ class Model_Todo extends \Orm\Model
             Log::error($msg.":".__FILE__.":".__LINE__);
             throw new Exception($msg);
         }
+        if ( $this->_save_data['uid'] =='' ||
+              !is_numeric( $this->_save_data['uid']))
+        {
+            $msg="uid不正=".$this->_save_data['uid'];
+            Log::error($msg.":".__FILE__.":".__LINE__);
+            throw new Exception($msg);
+        }
 
         //実行
         if (!$val->run($this->_save_data))
@@ -452,6 +477,8 @@ class Model_Todo extends \Orm\Model
             {
                 //先頭１個だけ返す
                 $this->_message = $error;
+                Log::error($error);
+
                 break;
             }
             return false;
@@ -504,11 +531,12 @@ class Model_Todo extends \Orm\Model
         $work['status_id']=$this->_save_data['status_id'];
         $work['category_id']=$this->_save_data['category_id'];
         $work['note']=$this->_save_data['note'];
+        $work['uid']=$this->_save_data['uid'];
         $work['delf']=0;
  
-        if (!isset($this->_save_data['todo_id']))
+        if (!isset($this->_save_data['todo_id']) || $this->_save_data['todo_id']=="")
         {
-            //新規保
+            //新規
             $todo = static::forge($work);
         }
         else
@@ -547,9 +575,10 @@ class Model_Todo extends \Orm\Model
      * データを削除する
      *
      * @param $id 削除対象のid
+     * @param $uid ログインユーザID (当面未使用。論理削除の場合）
      * @return true:正常  false:異常
      */
-    public static function deleteData($id)
+    public static function deleteData($id, $uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
         $todo = static::find($id);

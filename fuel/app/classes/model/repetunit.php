@@ -6,6 +6,7 @@ class Model_Repetunit extends \Orm\Model
 		'id',
 		'name',
 		'sort_no',
+		'uid',
 		'delf',
 		'created_at',
 		'updated_at',

@@ -1,6 +1,7 @@
 <?php
-class Controller_TodoEdit extends Controller_Template
+class Controller_TodoEdit extends Controller_Hybrid
 {
+    private $_uid;
     /**
      * 前処理
      *
@@ -11,8 +12,6 @@ class Controller_TodoEdit extends Controller_Template
         Log::info("START ".Request::active()->controller. ":".Request::active()->action);
 
         Config::load('define',true);
-        $this->template->title = Config::get('define.title_name.todo');
-        $this->template->menu_todo = "active";
 
         $data=Input::all();
         Log::info("param=".print_r($data,true));
@@ -22,6 +21,10 @@ class Controller_TodoEdit extends Controller_Template
         {
             Response::redirect('/users/');
         }
+
+        //ログインID取得
+        $login_user=Auth::get_user_id();
+        $this->_uid=$login_user[1];
     }
 
     /**
@@ -42,11 +45,18 @@ class Controller_TodoEdit extends Controller_Template
      */
 	public function action_index()
 	{
-        $data=Input::post();
+        try
+        {
+            $data=Input::post();
 
-
-        $view= View::forge('todo/form',$data);
-		return Response::forge( Presenter::Forge('todo/form', 'view', null, $view));
+            $view= View::forge('todo/form',$data);
+		    return Response::forge( Presenter::Forge('todo/form', 'view', null, $view));
+        }
+        catch (Exception $e) 
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
 	}
 
     /**
@@ -57,29 +67,34 @@ class Controller_TodoEdit extends Controller_Template
 	{
         try
         {
+            $json = array(
+                'res'   => 'OK',
+                'error' => '',
+            );
             $data=Input::post();
-           
-            $todo= new Model_Todo();
-            $todo->setData($data);
 
+            $todo= new Model_Todo();
+            $todo->setData($data, $this->_uid);
             $rc=$todo->validData();
             if(!$rc)
             {
-                //うまく動かない。。（保留）
-                $view= View::forge('todo/form',$data);
-		        return Response::forge( Presenter::Forge('todo/form', 'view', null, $view));
-
+                $json['res'] = 'NG';
+                $json['error'] = trim($todo->getMessage());
+                $this->response($json);
+                return;
             }
-
             $todo->saveData();
-
-
-            Response::redirect($data['refer']);
+            $this->response($json);
         }
         catch (Exception $e) 
         {
-            $data['message']=$e->getmessage();
-            $this->template->content = View::forge('error',$data);
+            $json['res'] = 'NG';
+            $msg=$e->getmessage().":".$e->getfile().":".$e->getline();
+            Log::error($msg);
+
+            $json['error'] = $e->getmessage();
+            $json['error'] = "予期せぬエラーが発生しました。";
+            $this->response($json);
         }
 	}
 
@@ -93,10 +108,8 @@ class Controller_TodoEdit extends Controller_Template
         {
             $data=Input::post();
 
-
             //削除
-            Model_Todo::deleteData($data['todo_id']);
-
+            Model_Todo::deleteData($data['todo_id'],$this->_uid);
 
             Response::redirect($data['refer']);
         

@@ -1,6 +1,7 @@
 <?php
-class Controller_CategoryEdit extends Controller_Template
+class Controller_CategoryEdit extends Controller_Hybrid
 {
+    private $_uid;
     /**
      * 前処理
      *
@@ -11,8 +12,6 @@ class Controller_CategoryEdit extends Controller_Template
         Log::info("START ".Request::active()->controller. ":".Request::active()->action);
 
         Config::load('define',true);
-        $this->template->title = Config::get('define.title_name.todo');
-        $this->template->menu_todo = "active";
         
         $data=Input::all();
         Log::info("param=".print_r($data,true));
@@ -22,6 +21,10 @@ class Controller_CategoryEdit extends Controller_Template
         {
             Response::redirect('/users/');
         }
+        //ログインID取得
+        $login_user=Auth::get_user_id();
+        $this->_uid=$login_user[1];
+
     }
     /**
      * 後処理
@@ -57,28 +60,39 @@ class Controller_CategoryEdit extends Controller_Template
     {
         try
         {
+
+            $json = array(
+                'res'   => 'OK',
+                'error' => '',
+            );
+
             $data=Input::post();
 
             $category= new Model_Category();
-            $category->setData($data);
+            $category->setData($data, $this->_uid);
 
             $rc=$category->validData();
             if(!$rc)
             {
-                //うまく動かない。。（保留）
-                $view= View::forge('todo/category',$data);
-                return Response::forge( Presenter::Forge('todo/category', 'view', null, $view));
+                $json['res'] = 'NG';
+                $json['error'] = trim($category->getMessage());
+                $this->response($json);
+                return;
             }
 
             $category->saveData();
-
-            Response::redirect($data['refer']);
+            $this->response($json);
 
         }
         catch (Exception $e)
         {
-            $data['message']=$e->getmessage();
-            $this->template->content = View::forge('error',$data);
+            $json['res'] = 'NG';
+            $msg=$e->getmessage().":".$e->getfile().":".$e->getline();
+            Log::error($msg);
+
+            $json['error'] = $e->getmessage();
+            $json['error'] = "予期せぬエラーが発生しました。";
+            $this->response($json);
         }
     }
 
@@ -92,17 +106,25 @@ class Controller_CategoryEdit extends Controller_Template
         {
             $data=Input::post();
 
+            $json = array(
+                'res'   => 'OK',
+                'error' => '',
+            );
 
-           //削除
-            $rc= Model_Todo::deleteData($data['category_id']);
+            $category= new Model_Category();
+            $category->setData($data, $this->_uid);
+
+            $rc=$category->validDeleteData();
             if(!$rc)
             {
-                //うまく動かない。。（保留）
-                $view= View::forge('todo/category',$data);
-                return Response::forge( Presenter::Forge('todo/category', 'view', null, $view));
+                $json['res'] = 'NG';
+                $json['error'] = trim($category->getMessage());
+                $this->response($json);
+                return;
             }
 
-            Response::redirect($data['refer']);
+            $category->saveData();
+            $this->response($json);
 
         }
         catch (Exception $e)
@@ -111,5 +133,4 @@ class Controller_CategoryEdit extends Controller_Template
             $this->template->content = View::forge('error',$data);
         }
     }
-
 }

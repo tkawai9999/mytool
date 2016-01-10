@@ -33,12 +33,31 @@ function openForm(url, id) {
   });
 }
 
-function saveForm(form,id) {
-    form.action='/mytool/todoedit/save';
-    form.todo_id.value=id;
-    form.method='post';
-    form.submit();
+function saveForm(id) {
+
+  var url='/mytool/todoedit/save';
+  var form  = $('#fm');
+  document.getElementById('todo_id').value=id;
+
+  $.ajax({
+    async:false,
+    type:"post",
+    dataType : 'json',
+    url:url,
+    data:form.serialize(),
+  }).done(function(json){
+    if( json.res != 'OK' )
+    {
+      alert(json.error);
+      return;
+    }
+    location.href=document.getElementById('refer').value;
+
+  }).fail(function() {
+          alert('ajaxエラーが発生しました');
+  });
 }
+
 function deleteForm(form,id) {
     form.action='/mytool/todoedit/delete';
     form.todo_id.value=id;
@@ -56,15 +75,32 @@ function changeStatus(form,id) {
     form.submit();
 }
 
-function actionCategory(url) {
-    var form=document.getElementById('form');
-    form.action=url;
-    form.method='post';
-    form.submit();
+function actionCategory(url,delf) {
+  var form  = $('#fm');
+  var obj=document.getElementsByName('delf');
+  obj[0].value=delf;
+
+  $.ajax({
+    async:false,
+    type:"post",
+    dataType : 'json',
+    url:url,
+    data:form.serialize(),
+  }).done(function(json){
+    if( json.res != 'OK' )
+    {
+      alert(json.error);
+      return;
+    }
+    location.href=document.getElementById('refer').value;
+
+  }).fail(function() {
+          alert('ajaxエラーが発生しました');
+  });
 }
 
 function selectCategory(id,name) {
-    var category_name=document.getElementById('category_name');
+    var category_name=document.getElementById('name');
     var category_id=document.getElementById('category_id');
 
     category_name.value=name
@@ -72,10 +108,9 @@ function selectCategory(id,name) {
 }
 
 function clearCategory() {
-    var category_name=document.getElementById('category_name');
+    var category_name=document.getElementById('name');
     var category_id=document.getElementById('category_id');
 
     category_name.value="";
     category_id.value="";
 }
-

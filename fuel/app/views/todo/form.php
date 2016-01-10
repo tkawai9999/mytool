@@ -8,7 +8,6 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="./favicon.ico">
 
     <title>MyTool!</title>
 
@@ -25,11 +24,11 @@
     <h4 class="modal-title">ToDo 登録</h4>
   </div><!-- /modal-header -->
   <div class="modal-body">
-     <form class="form-horizontal" role="form" name='fm'>
+     <form class="form-horizontal" role="form" name='fm' id='fm'>
         <div class="form-group">
           <label for="name" class="col-sm-3 control-label">タスク</label>
           <div class="col-sm-8">
-            <input type="text" class="form-control" name="name" 
+            <input type="text" class="form-control" name="name" id="name"
                             value="<?php echo $todo['name'] ?>">
           </div>
         </div>
@@ -50,7 +49,7 @@
             <input type="text" class="form-control" name="end_y" value="<?php echo $todo['end_y'] ?>" style="width: 100px"><span style="margin: 0 5px;">年</span>
             <input type="text" class="form-control" name="end_m" value="<?php echo $todo['end_m'] ?>" style="width: 50px"><span style="margin: 0 5px;">月</span>
             <input type="text" class="form-control" name="end_d" value="<?php echo $todo['end_d'] ?>" style="width: 50px"><span style="margin: 0 5px;">日</span>
-            <input type="text" class="form-control" name="end_d" value="<?php echo $todo['end_d'] ?>" style="width: 50px"><span style="margin: 0 5px;">時</span>
+            <input type="text" class="form-control" name="end_h" value="<?php echo $todo['end_h'] ?>" style="width: 50px"><span style="margin: 0 5px;">時</span>
             <input type="text" class="form-control" name="end_mi" value="<?php echo $todo['end_mi'] ?>" style="width: 50px"><span style="margin: 0 5px;">分</span>
           </div>
         </div>
@@ -58,6 +57,7 @@
           <label for="birth" class="col-sm-3 control-label ">繰り返し</label>
           <div class="col-sm-8 form-inline">
             <label class="checkbox"> 
+            <input type="hidden" name='repeat_flag' value="0"> 
             <input type="checkbox" name='repeat_flag' value="1" 
             <?php if ($todo['repeat_flag'] == 1) echo "checked"; ?> >
             する</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -117,22 +117,22 @@
             <textarea class="form-control" rows="3" name='note'><?php echo $todo['note']?></textarea>
           </div>
         </div>
-        <input type="hidden" name="todo_id"  value="" >
-        <input type="hidden" name="refer"  value="<?php echo $refer?>" >
+        <input type="hidden" name="todo_id" id="todo_id"  value="" >
+        <input type="hidden" name="refer" id="refer" value="<?php echo $refer?>" >
       </form>
     </div><!-- /modal-body -->
     <div class="modal-footer">
       <?php if ($todo['todo_id'] ==""): ?>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" 
-          onClick="saveForm(fm,'')"> 新規に保存</button>
+        <button type="button" class="btn btn-primary"  
+          onClick="saveForm('')"> 新規に保存</button>
       <?php else: ?>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"
+        <button type="button" class="btn btn-danger" 
           onClick="deleteForm(fm,'<?php echo $todo['todo_id']?>')">
           削除</button>
-        <button type="button" class="btn btn-success" data-dismiss="modal"
-          onClick="saveForm(fm,'')"> 新規に保存</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal"
-          onClick="saveForm(fm,'<?php echo $todo['todo_id']?>')">
+        <button type="button" class="btn btn-success" 
+          onClick="saveForm('')"> 新規に保存</button>
+        <button type="button" class="btn btn-primary"
+          onClick="saveForm('<?php echo $todo['todo_id']?>')">
           変更を保存</button>
       <?php endif ?>
     </div><!-- /modal-footer -->
