@@ -15,6 +15,13 @@
     <?php echo Asset::css('bootstrap.min.css','bootstrap-custom.css'); ?>
     <?php echo Asset::js(array('bootstrap.min.js','jquery-2.1.4.min.js'));?>
     <?php echo Asset::css('dashboard.css'); ?>
+  <script>
+  $(document).ready(function(){
+alert('a');
+      changeRepeat(); 
+  });
+  </script>
+
   </head>
   <body>
   <div class="modal-header">
@@ -58,21 +65,24 @@
           <div class="col-sm-8 form-inline">
             <label class="checkbox"> 
             <input type="hidden" name='repeat_flag' value="0"> 
-            <input type="checkbox" name='repeat_flag' value="1" 
-            <?php if ($todo['repeat_flag'] == 1) echo "checked"; ?> >
-            する</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="text" class="form-control" name="repeat_interval" 
-              value="<?php echo $todo['repeat_interval'] ?>" 
-              style="width: 50px"> &nbsp;&nbsp;&nbsp;
-            <select class="form-control" name='repeat_unit_id' style="width: 150px">
-              <?php foreach ($repetunits as $repetunit ): ?>
-
-                <option value='<?php echo $repetunit->id?>'
-                  <?php if($repetunit->id==$todo['repeat_unit_id']) echo "selected"?>>
-                  <?php echo $repetunit->name?></option>
-              <?php endforeach; ?>
-            </select>
-            <span style="margin: 0 5px;">毎</span>
+            <input type="checkbox" id="repeat_flag" name='repeat_flag' 
+              value="1" <?php if ($todo['repeat_flag'] == 1) echo "checked"; ?> 
+              onChange="changeRepeat()"> する
+            </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div id ='repeat_block'  >
+              <input type="text" class="form-control" name="repeat_interval" 
+                value="<?php echo $todo['repeat_interval'] ?>" 
+                style="width: 50px"> &nbsp;&nbsp;&nbsp;
+              <select class="form-control" name='repeat_unit_id' 
+                style="width: 150px">
+                <?php foreach ($repetunits as $repetunit ): ?>
+                  <option value='<?php echo $repetunit->id?>'
+                    <?php if($repetunit->id==$todo['repeat_unit_id']) echo "selected"?>>
+                    <?php echo $repetunit->name?></option>
+                <?php endforeach; ?>
+              </select>
+              <span style="margin: 0 5px;">毎</span>
+           </div> <!--/repeat_block-->
           </div>
         </div>
 <!-- 当面保留
@@ -118,21 +128,20 @@
           </div>
         </div>
         <input type="hidden" name="todo_id" id="todo_id"  value="" >
-        <input type="hidden" name="refer" id="refer" value="<?php echo $refer?>" >
       </form>
     </div><!-- /modal-body -->
     <div class="modal-footer">
       <?php if ($todo['todo_id'] ==""): ?>
         <button type="button" class="btn btn-primary"  
-          onClick="saveForm('')"> 新規に保存</button>
+          onClick="actionForm('/mytool/todoedit/save','')"> 新規に保存</button>
       <?php else: ?>
         <button type="button" class="btn btn-danger" 
-          onClick="deleteForm(fm,'<?php echo $todo['todo_id']?>')">
+          onClick="actionForm('/mytool/todoedit/delete','<?php echo $todo['todo_id']?>')">
           削除</button>
         <button type="button" class="btn btn-success" 
-          onClick="saveForm('')"> 新規に保存</button>
+          onClick="actionForm('/mytool/todoedit/save','')"> 新規に保存</button>
         <button type="button" class="btn btn-primary"
-          onClick="saveForm('<?php echo $todo['todo_id']?>')">
+          onClick="actionForm('/mytool/todoedit/save','<?php echo $todo['todo_id']?>')">
           変更を保存</button>
       <?php endif ?>
     </div><!-- /modal-footer -->

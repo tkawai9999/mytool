@@ -126,6 +126,7 @@ class Test_Model_Category extends \TestCase
         $this->assertArrayHasKey('category_id', $data);
         $result=Model_Category::find($data['category_id']);
         $this->assertEquals($result['name'],$work['name']);
+        $this->assertEquals($result['sort_no'],$data['category_id']);
     }
 
     /**
@@ -141,12 +142,13 @@ class Test_Model_Category extends \TestCase
         $data=$category->getData();
         $this->assertArrayHasKey('category_id', $data);
 
-        $work=array('category_id'=>$data['category_id'], 'name'=>'いいい', 'delf'=>'0');
+        $work=array('category_id'=>$data['category_id'], 'name'=>'いいい', 'delf'=>'0', 'sort_no'=>$data['sort_no']);
         $category->setData($work,5);
         $category->saveData();
 
         $result=Model_Category::find($data['category_id']);
         $this->assertEquals($result['name'],$work['name']);
+        $this->assertEquals($result['sort_no'],$work['sort_no']);
     }
 
     /**
@@ -162,13 +164,14 @@ class Test_Model_Category extends \TestCase
         $data=$category->getData();
         $this->assertArrayHasKey('category_id', $data);
 
-        $work=array('category_id'=>$data['category_id'], 'name'=>'いいい', 'delf'=>'1');
+        $work=array('category_id'=>$data['category_id'], 'name'=>'いいい', 'delf'=>'1', 'sort_no'=>$data['sort_no']);
         $category->setData($work,5);
         $category->saveData();
 
         $result=Model_Category::find($data['category_id']);
         $this->assertEquals($result['name'],$work['name']);
         $this->assertEquals($result['delf'],$work['delf']);
+        $this->assertEquals($result['sort_no'],$work['sort_no']);
     }
 
     /**
@@ -199,7 +202,7 @@ class Test_Model_Category extends \TestCase
         
         //削除チェック
         $category = new Model_Category();
-        $work=array('category_id'=>$data['category_id'], 'name'=>'aaa','delf'=>'1');
+        $work=array('category_id'=>$data['category_id'], 'name'=>'aaa','delf'=>'1', 'sort_no'=>$data['sort_no']);
         $category->setData($work,5);
         $rc=$category->validDeleteData();
         $this->assertTrue($rc);
@@ -221,7 +224,7 @@ class Test_Model_Category extends \TestCase
 
         //削除チェック
         $category = new Model_Category();
-        $work=array('category_id'=>$data['category_id'], 'name'=>'aaa','delf'=>'1');
+        $work=array('category_id'=>$data['category_id'], 'name'=>'aaa','delf'=>'1', 'sort_no'=>$data['sort_no']);
         $category->setData($work,99);
         $rc=$category->validDeleteData();
         $this->assertFalse($rc);

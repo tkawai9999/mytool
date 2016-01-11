@@ -227,21 +227,47 @@ class Model_Category extends \Orm\Model
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
+        //新規/更新判定フラグ
+        $flag_new=false;
+        if (!isset($this->_save_data['category_id']) || 
+                      $this->_save_data['category_id']=="") $flag_new=true;
+
        //登録データ編集
         $work=array();
         $work['name']=$this->_save_data['name'];
+
+        if (!isset($this->_save_data['sort_no']) ||
+            $this->_save_data['sort_no']=="")
+        {
+            if ($flag_new)
+            {
+                $query = static::query();
+                $max=$query->max('id');
+                $work['sort_no']=$query->max('id')+1;
+            }
+        }
+
         $work['uid']=$this->_save_data['uid'];
         $work['delf']=$this->_save_data['delf'];
 
-       if (!isset($this->_save_data['category_id']) || 
-                          $this->_save_data['category_id']=="")
+        if ($flag_new)
         {
-            //新規
             $category = static::forge($work);
         }
         else
         {
-            //更新
+            $category = static::find($this->_save_data['category_id']);
+        }
+
+        $work['uid']=$this->_save_data['uid'];
+        $work['delf']=$this->_save_data['delf'];
+
+        if ($flag_new)
+        {
+            $category = static::forge($work);
+        }
+        else
+        {
             $category = static::find($this->_save_data['category_id']);
             if(!isset($category))
             {
@@ -249,11 +275,13 @@ class Model_Category extends \Orm\Model
                 Log::error($msg.":".__FILE__.":".__LINE__);
                 throw new Exception($msg);
             }
+            $work['sort_no']=$category['sort_no'];
             $category->set($work);
         }
         $category->save();
         Log::debug(DB::last_query());
         $this->_save_data['category_id']=$category->id;
+        $this->_save_data['sort_no']=$category->sort_no;
         Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return true;
     }

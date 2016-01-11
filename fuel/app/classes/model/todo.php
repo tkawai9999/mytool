@@ -77,17 +77,17 @@ class Model_Todo extends \Orm\Model
         $list=array();
         foreach ( $all as $rec)
         {
-            $remain_day = Model_Util::getRemainDay($rec->end_date);
             if ( $rec->status_id==Config::get('define.statuses_id.during') )
             {
                 array_push ( $list, $rec );
             }
             elseif($rec->status_id==Config::get('define.statuses_id.untreated') )
             {
-                if ( $remain_day <> NULL && $remain_day <= 7)
+                if ( $rec->end_date_real <> NULL )
                 {
-                    array_push ( $list, $rec );
-                }  
+                    $remain_day = Model_Util::getRemainDay($rec->end_date_real);
+                    if ( $remain_day <=7) array_push ( $list, $rec );
+                }
             }
         }
         Log::debug("END ".__CLASS__.":".__FUNCTION__);
@@ -115,7 +115,11 @@ class Model_Todo extends \Orm\Model
         $list=array();
         foreach ( $all as $rec)
         {
-            if ( $rec['end_date'] <> NULL ) array_push ( $list, $rec );
+            if ( $rec['end_date_real'] <> NULL ) 
+            {
+                $remain_day = Model_Util::getRemainDay($rec->end_date_real);
+                if ( $remain_day >7) array_push ( $list, $rec );
+            }
         }
         Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
@@ -141,7 +145,7 @@ class Model_Todo extends \Orm\Model
         $list=array();
         foreach ( $all as $rec)
         {
-            if ( $rec['end_date'] == NULL ) array_push ( $list, $rec );
+            if ( $rec['end_date_real'] == NULL ) array_push ( $list, $rec );
         }
         Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
@@ -249,45 +253,6 @@ class Model_Todo extends \Orm\Model
         Log::debug("END ".__CLASS__.":".__FUNCTION__);
         return $list;
     }
-    /**
-     * ステータスを変更する
-     *
-     * @param $todo_id 対象のtodo_id
-     * @param $status_id 対象のstatus_id
-     * @param $uid ログインユーザID
-     * @return true:正常  false:異常
-     */
-    public static function updateStatus($todo_id, $status_id,$uid)
-    {
-        Log::debug("START ".__CLASS__.":".__FUNCTION__);
-
-        //status_idチェック
-        $status = Model_Status::find($status_id);
-        if (count($status)==0 )
-        {
-            $msg="対象statusなし。status_id=$status_id";
-            Log::error($msg.":".__FILE__.":".__LINE__);
-            throw new Exception($msg);
-        }
-
-        //対象データ取得
-        $todo = static::find($todo_id);
-        if (count($todo)==0 )
-        {
-            $msg="対象データなし。todo_id=$todo_id";
-            Log::error($msg);
-            throw new Exception($msg);
-        }
-
-        //更新
-        $todo['status_id'] = $status_id;
-        $todo['uid'] = $uid;
-        $todo->save();
-        Log::debug(DB::last_query());
-
-        Log::debug("END ".__CLASS__.":".__FUNCTION__);
-        return true;
-    }
 
     /**
      * ステータスを変更する
@@ -348,6 +313,7 @@ class Model_Todo extends \Orm\Model
         $work['repeat_unit_id']=$info['repeat_unit_id'];
         $work['status_id']=$info['status_id'];
         $work['category_id']=$info['category_id'];
+        $work['sort_no']=$info['sort_no'];
         $work['note']=$info['note'];
         
         Log::debug("END ".__CLASS__.":".__FUNCTION__);
@@ -532,7 +498,16 @@ class Model_Todo extends \Orm\Model
         $work['category_id']=$this->_save_data['category_id'];
         $work['note']=$this->_save_data['note'];
         $work['uid']=$this->_save_data['uid'];
+        if (!isset($this->_save_data['sort_no']) || 
+            $this->_save_data['sort_no']=="")
+        {
+            $query = static::query();
+            $max=$query->max('id');
+            $work['sort_no']=$query->max('id')+1;
+            $this->_save_data['sort_no']=$work['sort_no'];
+        }
         $work['delf']=0;
+
  
         if (!isset($this->_save_data['todo_id']) || $this->_save_data['todo_id']=="")
         {
@@ -593,7 +568,62 @@ class Model_Todo extends \Orm\Model
         return true;
     }
 
-   /**
+
+    /**
+     * 指定したtodo_idが表示されるべきリストのアクションを取得する
+     *
+     * @param $id 対象のid
+     * @return string todo一覧のアクション
+     */
+    public static function getTodoListKind($id)
+    {
+        Log::debug("START ".__CLASS__.":".__FUNCTION__);
+
+        $info=static::getPk($id);
+        if (count($info)==0 )
+        {
+            $msg="対象データなし。todo_id=$id";
+            Log::error($msg);
+            throw new Exception($msg);
+        }
+               
+        switch ($info['status_id'])
+        {
+            case Config::get('define.statuses_id.during'):
+                $action = "during";
+                break;
+            case Config::get('define.statuses_id.untreated'):
+                $remain_day = Model_Util::getRemainDay($info['end_date_real']);
+                if ( $info['end_date_real'] == NULL )
+                {
+                    $action = "untreat2";
+                }  
+                elseif ( $remain_day <= 7)
+                {
+                    $action = "during";
+                }  
+                else
+                {
+                    $action = "untreat1";
+                }  
+                break;
+            case Config::get('define.statuses_id.hold'):
+                $action = "hold";
+                break;
+            case Config::get('define.statuses_id.finished'):
+                $action = "finished";
+                break;
+            default:
+                $msg="対象statusなし。status_id=".$info['status_id'];
+                Log::error($msg.":".__FILE__.":".__LINE__);
+                throw new Exception($msg);
+        }
+        Log::debug("END ".__CLASS__.":".__FUNCTION__);
+        return $action;
+    }
+
+
+    /**
      * 次の直近終了日を設定する(繰り返し設定のみ）
      *
      * @param $id 削除対象のid

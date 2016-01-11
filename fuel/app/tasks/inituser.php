@@ -20,9 +20,9 @@ class InitUser
                 'group'=>100,
             ),
             array(
-                'user'=>'kawai',
-                'passwd'=>'kawai',
-                'email'=>'kawai@aaa.co.jp',
+                'user'=>'guest',
+                'passwd'=>'guest',
+                'email'=>'guest@aaa.co.jp',
                 'group'=>1,
             ),
         );

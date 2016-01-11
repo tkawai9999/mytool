@@ -216,13 +216,37 @@ class Controller_TodoList extends Controller_Template
 
             $todo_id=$data['todo_id'];
             $status_id=$data['status_id'];
-            $refer=$data['refer'];
+
+            //更新
+            $info=Model_Todo::getPk($todo_id);
+            if ( count($info)==0)
+            {
+                $msg="todo_idなし:$todo_id";
+                Log::error($msg.":".__FILE__.":".__LINE__);
+                throw new Exception($msg);
+            }
+            $info['status_id']=$status_id;
+            $todo= new Model_Todo();
+            $todo->setData($info,$this->_uid);
+            $rc=$todo->validData();
+            if (!$rc)
+            {
+                $msg=$todo->getMessage();
+                Log::error($msg.":".__FILE__.":".__LINE__);
+                throw new Exception($msg);
+            }
+            $todo->saveData();
+
+            //更新後のステータスの一覧にリダイレクト
+            $action=Model_Todo::getTodoListKind($todo_id);
+
+            Response::redirect("todolist/$action");
+            return;
 
             //ステータス更新
             $data['todos'] = Model_Todo::updateStatus($todo_id, 
                 $status_id, $this->_uid);
 
-            Response::redirect($refer);
         }
         catch (Exception $e) 
         {

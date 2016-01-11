@@ -11,19 +11,18 @@
   });
 */
 function openForm(url, id) {
-  var refer=location.href;
   $.ajax({
     async:false,
     type:"post",
     url:url,
     data:{
       id:id,
-      refer:refer,
     },
     success:function(msg) {
       var modal=document.getElementById('MyModal');
       modal.innerHTML=msg;
       $("#MyModal").modal('toggle');
+     changeRepeat();
     },
     error:function(msg) {
       var out=document.getElementById('message');
@@ -33,9 +32,7 @@ function openForm(url, id) {
   });
 }
 
-function saveForm(id) {
-
-  var url='/mytool/todoedit/save';
+function actionForm(url,id) {
   var form  = $('#fm');
   document.getElementById('todo_id').value=id;
 
@@ -51,18 +48,24 @@ function saveForm(id) {
       alert(json.error);
       return;
     }
-    location.href=document.getElementById('refer').value;
+    location.reload(true);
 
   }).fail(function() {
           alert('ajaxエラーが発生しました');
   });
 }
 
-function deleteForm(form,id) {
-    form.action='/mytool/todoedit/delete';
-    form.todo_id.value=id;
-    form.method='post';
-    form.submit();
+
+function changeRepeat() {
+  var flag=document.getElementById('repeat_flag');
+  if (flag.checked)
+  {
+    document.getElementById("repeat_block").style.display="block";
+  }
+  else
+  {
+    document.getElementById("repeat_block").style.display="none";
+  }
 }
 
 function changeStatus(form,id) {
@@ -70,7 +73,6 @@ function changeStatus(form,id) {
     form.action='changeStatus';
     form.todo_id.value=id;
     form.status_id.value=status.value;
-    form.refer.value=location.href;
     form.method='post';
     form.submit();
 }
@@ -92,7 +94,7 @@ function actionCategory(url,delf) {
       alert(json.error);
       return;
     }
-    location.href=document.getElementById('refer').value;
+    location.reload(true);
 
   }).fail(function() {
           alert('ajaxエラーが発生しました');

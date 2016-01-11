@@ -79,11 +79,11 @@
         <td><?php echo $todo->category->name ?></td>
         <td><?php echo $todo->start_date ?></td>
         <td> 
-          <?php if ($todo->end_date==""): ?>
+          <?php if ($todo->end_date_real==""): ?>
             -
           <?php else: ?>
             <?php if ($todo->remain_day<=0 ) echo " <font color=\"red\">" ?> 
-            <?php echo date('m/d',strtotime($todo->end_date)) ?>
+            <?php echo date('m/d',strtotime($todo->end_date_real)) ?>
                  (残り<?php echo $todo->remain_day?>日)
             <?php if ($todo->remain_day<=0 ) echo "</font>" ?> 
           <?php endif; ?>
@@ -92,7 +92,6 @@
       <?php endforeach; ?>
       <?php echo Form::hidden("todo_id", '')?>
       <?php echo Form::hidden("status_id", '')?>
-      <?php echo Form::hidden("refer", '')?>
     </form>
     </tbody>
   </table>

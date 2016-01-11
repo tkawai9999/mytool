@@ -106,18 +106,27 @@ class Controller_TodoEdit extends Controller_Hybrid
 	{
         try
         {
-            $data=Input::post();
+           $json = array(
+                'res'   => 'OK',
+                'error' => '',
+            );
 
+            $data=Input::post();
             //削除
             Model_Todo::deleteData($data['todo_id'],$this->_uid);
 
-            Response::redirect($data['refer']);
+            $this->response($json);
         
         }
         catch (Exception $e) 
         {
-            $data['message']=$e->getmessage();
-            $this->template->content = View::forge('error',$data);
+            $json['res'] = 'NG';
+            $msg=$e->getmessage().":".$e->getfile().":".$e->getline();
+            Log::error($msg);
+
+            $json['error'] = $e->getmessage();
+            $json['error'] = "予期せぬエラーが発生しました。";
+            $this->response($json);
         }
     }
 }

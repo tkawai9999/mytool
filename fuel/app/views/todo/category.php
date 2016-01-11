@@ -61,7 +61,6 @@
         </div> <!--form-group -->
         <input type="hidden" name="category_id"  id='category_id' value="" >
         <input type="hidden" name="delf"  id='delf' value="" >
-        <input type="hidden" name="refer" id="refer" value="<?php echo $refer?>" >
       </form>
     </div><!-- /modal-body -->
   </body>

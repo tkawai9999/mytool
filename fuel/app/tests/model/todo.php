@@ -59,7 +59,7 @@ class Test_Model_Todo extends \TestCase
      */
     public function getListUntreatDeadLineYes_ok1(){
         $list=Model_Todo::getListUntreatDeadLineYes(5);
-        $this->assertCount(5, $list);
+        $this->assertCount(3, $list);
     }
     /**
      * 正常：未-期限無し
@@ -125,48 +125,6 @@ class Test_Model_Todo extends \TestCase
             if ( $rec['id']==2) $this->assertEquals($rec['cnt'], 5);
             if ( $rec['id']==3) $this->assertEquals($rec['cnt'], 2);
         }
-    }
-
-    /**
-     * 正常：ステータス更新
-     * @test
-     */
-    public function updateStatus_ok1(){
-        $todo_id=1;
-        $status_id=2;
-        $rc=Model_Todo::updateStatus($todo_id,$status_id,5);
-        $this->assertTrue($rc);
-        $info=Model_Todo::find($todo_id);
-        $this->assertEquals($info['status_id'], $status_id,5);
-
-        $status_id=3;
-        $rc=Model_Todo::updateStatus($todo_id,$status_id,7);
-        $this->assertTrue($rc);
-        $info=Model_Todo::find($todo_id);
-        $this->assertEquals($info['status_id'], $status_id);
-        $this->assertEquals($info['uid'], 7);
-
-    }
-
-    /**
-     * 異常：対象のtodo_idなし
-     * @test
-     * @expectedException Exception
-     */
-    public function updateStatus_ng1(){
-        $todo_id=10000;
-        $status_id=1;
-        $rc=Model_Todo::updateStatus($todo_id,$status_id,5);
-    }
-    /**
-     * 異常：ステータスid不正
-     * @test
-     * @expectedException Exception
-     */
-    public function updateStatus_ng2(){
-        $todo_id=1;
-        $status_id='a';
-        $rc=Model_Todo::updateStatus($todo_id,$status_id,5);
     }
 
 
@@ -257,6 +215,8 @@ class Test_Model_Todo extends \TestCase
         $this->assertEquals($result['status_id'],$this->_entry_data['status_id']);
         $this->assertEquals($result['category_id'],$this->_entry_data['category_id']);
         $this->assertEquals($result['note'],$this->_entry_data['note']);
+        $this->assertGreaterThanOrEqual(1, $result['sort_no']);
+        $this->assertEquals($result['sort_no'],$data['todo_id']);
 
     }
 
@@ -408,6 +368,7 @@ class Test_Model_Todo extends \TestCase
         $this->assertEquals($result['start_date'],'2016-05-23 22:15:00');
         $this->assertEquals($result['end_date'],'2017-12-03 04:20:00');
         $this->assertEquals($result['end_date_real'],'2016-05-23 22:15:00');
+        $this->assertEquals($result['sort_no'],$data['sort_no']);
 
     }
 
@@ -833,5 +794,151 @@ class Test_Model_Todo extends \TestCase
         $rc=$todo->validData();
     }
 
+   /**
+     * 正常：対応中１
+     * @test
+     */
+    public function getTodoListKind_ok1(){
+
+        //データ用意
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['status_id'] = Config::get('define.statuses_id.during');
+        
+        $todo->setData($work,5);
+        $todo->saveData();
+        $data=$todo->getData();
+
+        $action=Model_Todo::getTodoListKind($data['todo_id']);
+        $this->assertEquals($action,'during');
+    }
+
+
+   /**
+     * 正常：対応中2
+     * @test
+     */
+    public function getTodoListKind_ok2(){
+
+        //データ用意
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['status_id'] = Config::get('define.statuses_id.untreated');
+        $work['end_y'] = date('Y',strtotime("+6 day"));
+        $work['end_m'] = date('m',strtotime("+6 day"));
+        $work['end_d'] = date('d',strtotime("+6 day"));
+        $work['end_h'] = date('H',strtotime("+6 day"));
+        $work['end_mi'] = date('i',strtotime("+6 day"));
+
+        $todo->setData($work,5);
+        $todo->saveData();
+        $data=$todo->getData();
+        $action=Model_Todo::getTodoListKind($data['todo_id']);
+        $this->assertEquals($action,'during');
+    }
+
+  /**
+     * 正常：未（期限あり）
+     * @test
+     */
+    public function getTodoListKind_ok3(){
+
+        //データ用意
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['status_id'] = Config::get('define.statuses_id.untreated');
+        $work['end_y'] = date('Y',strtotime("+8 day"));
+        $work['end_m'] = date('m',strtotime("+8 day"));
+        $work['end_d'] = date('d',strtotime("+8 day"));
+        $work['end_h'] = date('H',strtotime("+8 day"));
+        $work['end_mi'] = date('i',strtotime("+8 day"));
+
+        $todo->setData($work,5);
+        $todo->saveData();
+        $data=$todo->getData();
+        $action=Model_Todo::getTodoListKind($data['todo_id']);
+        $this->assertEquals($action,'untreat1');
+    }
+
+     /**
+     * 正常：未（期限あり）
+     * @test
+     */
+    public function getTodoListKind_ok4(){
+
+        //データ用意
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['status_id'] = Config::get('define.statuses_id.untreated');
+
+        $todo->setData($work,5);
+        $todo->saveData();
+        $data=$todo->getData();
+        $action=Model_Todo::getTodoListKind($data['todo_id']);
+        $this->assertEquals($action,'untreat2');
+    }
+
+     /**
+     * 正常：保留
+     * @test
+     */
+    public function getTodoListKind_ok5(){
+
+        //データ用意
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['status_id'] = Config::get('define.statuses_id.hold');
+
+        $todo->setData($work,5);
+        $todo->saveData();
+        $data=$todo->getData();
+        $action=Model_Todo::getTodoListKind($data['todo_id']);
+        $this->assertEquals($action,'hold');
+    }
+
+     /**
+     * 正常：完了
+     * @test
+     */
+    public function getTodoListKind_ok6(){
+
+        //データ用意
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['status_id'] = Config::get('define.statuses_id.finished');
+
+        $todo->setData($work,5);
+        $todo->saveData();
+        $data=$todo->getData();
+        $action=Model_Todo::getTodoListKind($data['todo_id']);
+        $this->assertEquals($action,'finished');
+    }
+
+     /**
+     * 異常：todo_idなし
+     * @expectedException Exception
+     * @test
+     */
+    public function getTodoListKind_ng1(){
+
+        $action=Model_Todo::getTodoListKind(99999);
+    }
+
+     /**
+     * 異常：todo_idなし
+     * @expectedException Exception
+     * @test
+     */
+    public function getTodoListKind_ng2(){
+       //データ用意
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['status_id'] = 99;
+
+        $todo->setData($work,5);
+        $todo->saveData();
+        $data=$todo->getData();
+        $action=Model_Todo::getTodoListKind($data['todo_id']);
+    }
 }
 

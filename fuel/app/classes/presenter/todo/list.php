@@ -9,6 +9,8 @@ class Presenter_Todo_List extends Presenter
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
+        $this->page_name =  "";
+
         //ログインID取得
         $login_user=Auth::get_user_id();
         $uid=$login_user[1];
@@ -34,9 +36,9 @@ class Presenter_Todo_List extends Presenter
         $list=array();
         foreach( $this->_view->todos as $rec)
         {
-            if ( $rec['end_date'] <>"" )
+            if ( $rec['end_date_real'] <>"" )
             {
-                $rec['remain_day']= Model_Util::getRemainDay($rec['end_date']);
+                $rec['remain_day']= Model_Util::getRemainDay($rec['end_date_real']);
             }
             array_push($list, $rec);
         }
