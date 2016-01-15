@@ -24,7 +24,6 @@ return array(
      */
     'order' => array(
         'statuses',
-        'categories',
         'repetunits'
         // 'UserSeeder'  #example
     ),

@@ -655,22 +655,10 @@ class Model_Todo extends \Orm\Model
             {
                 $end_date_real=$this->_save_data['end_date_real'];
                 $ival=$this->_save_data['repeat_interval'];
-//下記は変更予定＊＊＊＊＊＊＊＊＊＊＊＊
-                switch ($this->_save_data['repeat_unit_id'])
-                {
-                    case '1':
-                        $unit="day";
-                        break;
-                    case '2':
-                        $unit="week";
-                        break;
-                    case '3':
-                        $unit="month";
-                        break;
-                    case '4':
-                        $unit="year";
-                        break;
-                }
+
+                //strtotimeの加算用文字を取得
+                $result=Model_Repetunit::find($this->_save_data['repeat_unit_id']);
+                $unit=$result['dateword'];
                 $end_date_real = date('Y-m-d H:i:00', 
                         strtotime("$end_date_real +$ival $unit"));
                 if ( $this->_save_data['end_date'] =="" ||

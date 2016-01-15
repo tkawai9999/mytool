@@ -5,6 +5,7 @@ class Model_Repetunit extends \Orm\Model
 	protected static $_properties = array(
 		'id',
 		'name',
+		'dateword',
 		'sort_no',
 		'uid',
 		'delf',
