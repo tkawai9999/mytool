@@ -25,7 +25,7 @@ alert('a');
   </head>
   <body>
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">
+    <button type="button" class="close" data-dismiss="modal" onClick="closeForm()">
       <span aria-hidden="true">&#215;</span><span class="sr-only">閉じる</span>
     </button>
     <h4 class="modal-title">ToDo 登録</h4>

@@ -10,7 +10,7 @@
     });
   });
 */
-function openForm(url, id) {
+function openForm(url, id, mode) {
   $.ajax({
     async:false,
     type:"post",
@@ -21,8 +21,8 @@ function openForm(url, id) {
     success:function(msg) {
       var modal=document.getElementById('MyModal');
       modal.innerHTML=msg;
-      $("#MyModal").modal('toggle');
-     changeRepeat();
+      if (mode=="new") $("#MyModal").modal('toggle');
+      changeRepeat();
     },
     error:function(msg) {
       var out=document.getElementById('message');
@@ -54,7 +54,9 @@ function actionForm(url,id) {
           alert('ajaxエラーが発生しました');
   });
 }
-
+function closeForm() {
+  location.reload(true);
+}
 
 function changeRepeat() {
   var flag=document.getElementById('repeat_flag');
@@ -92,10 +94,8 @@ function actionCategory(url,delf) {
     if( json.res != 'OK' )
     {
       alert(json.error);
-      return;
     }
-    location.reload(true);
-
+    openForm('/mytool/categoryedit','','refresh');
   }).fail(function() {
           alert('ajaxエラーが発生しました');
   });
