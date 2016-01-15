@@ -51,7 +51,7 @@ class Test_Model_Todo extends \TestCase
      */
     public function getListDuring_ok1(){
         $list=Model_Todo::getListDuring(5);
-        $this->assertCount(4, $list);
+        $this->assertCount(5, $list);
     }
     /**
      * 正常：未-期限有り
@@ -59,7 +59,7 @@ class Test_Model_Todo extends \TestCase
      */
     public function getListUntreatDeadLineYes_ok1(){
         $list=Model_Todo::getListUntreatDeadLineYes(5);
-        $this->assertCount(3, $list);
+        $this->assertCount(2, $list);
     }
     /**
      * 正常：未-期限無し

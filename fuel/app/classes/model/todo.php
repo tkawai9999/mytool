@@ -442,7 +442,7 @@ class Model_Todo extends \Orm\Model
             foreach ($errors as $error)
             {
                 //先頭１個だけ返す
-                $this->_message = $error;
+                $this->_message = trim($error);
                 Log::error($error);
 
                 break;
