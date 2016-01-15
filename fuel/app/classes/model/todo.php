@@ -360,6 +360,13 @@ class Model_Todo extends \Orm\Model
                     $this->_save_data['end_mi']);
         }
 
+        //繰り返ししない場合は間隔、単位は初期化
+        if ( $this->_save_data['repeat_flag']=='0')
+        {
+             $this->_save_data['repeat_interval'] = '';
+             $this->_save_data['repeat_unit_id'] = 1;
+        }
+
         Log::debug("END ".__CLASS__.":".__FUNCTION__);
     }
 
