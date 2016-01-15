@@ -3,7 +3,7 @@
     <div class="col-xs-12 col-sm-3 col-md-2 sidebar">
 <!--side start-->
 <div class="panel panel-info">
-  <div class="panel-heading">ステータス別</div>
+  <div class="panel-heading">ステータス</div>
   <div class="panel-body">
     <ul class="nav nav-sidebar">
       <li class="<?php if(isset($side_during)) echo $side_during?>">
@@ -20,8 +20,7 @@
   </div>
 </div>
 <div class="panel panel-info">
-  <div class="panel-heading">カテゴリ別&nbsp;&nbsp;
-    <button type="button" class="btn btn-primary "
+  <div class="panel-heading">カテゴリ&nbsp;&nbsp;<button type="button" class="btn btn-primary "
       onClick="openForm('/mytool/categoryedit','','new');" >編集</button>
   </div>
   <div class="panel-body">
