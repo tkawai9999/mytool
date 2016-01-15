@@ -13,5 +13,7 @@ insert into todos(name,start_date,end_date,repeat_flag,repeat_unit_id,repeat_int
 ('task_delf1',NULL,NULL,0,NULL,NULL,NULL,4,1,'delf',10,5,1,now(),now()),
 ('task_delf2',NULL,NULL,0,NULL,NULL,NULL,4,4,'delf',11,5,1,now(),now()), 
 ('task_pk1','2016/01/12 09:50:00','2016/06/11 23:59:00',1,2,1,'2016/01/19 09:50:00',1,2,'pk',12,5,0,now(),now()),
-('task_pk2',NULL,NULL,0,NULL,NULL,NULL,1,2,'pk',13,5,0,now(),now());
+('task_pk2',NULL,NULL,0,NULL,NULL,NULL,1,2,'pk',13,5,0,now(),now()),
+('another_user_untreated1',NULL,NULL,0,NULL,NULL,NULL,1,1,'untreated',1,8,0,now(),now()),
+('another_user_during',NULL,NULL,0,NULL,NULL,NULL,2,1,'untreated',1,9,0,now(),now());
 
