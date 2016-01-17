@@ -335,6 +335,10 @@ class Model_Todo extends \Orm\Model
         //ユーザID
         $this->_save_data['uid']=$uid;
 
+        //カテゴリID未選択時の設定
+        if ( !isset($this->_save_data['category_id']))
+            $this->_save_data['category_id']="";
+
         //開始日、終了日の設定
         $this->_save_data['start_date']="";
         if ($this->_save_data['start_y']<>"")
@@ -404,6 +408,8 @@ class Model_Todo extends \Orm\Model
             ->add_rule('valid_datetime');
         $val->add('end_date', '終了')
             ->add_rule('valid_datetime');
+        $val->add('category_id', 'カテゴリ')
+            ->add_rule('required');
 
         if ( $this->_save_data['repeat_flag'] =='1')
         {
@@ -424,13 +430,6 @@ class Model_Todo extends \Orm\Model
               !is_numeric( $this->_save_data['status_id']))
         {
             $msg="status_id不正=".$this->_save_data['status_id'];
-            Log::error($msg.":".__FILE__.":".__LINE__);
-            throw new Exception($msg);
-        }
-        if ( $this->_save_data['category_id'] =='' ||
-              !is_numeric( $this->_save_data['category_id']))
-        {
-            $msg="category_id不正=".$this->_save_data['category_id'];
             Log::error($msg.":".__FILE__.":".__LINE__);
             throw new Exception($msg);
         }

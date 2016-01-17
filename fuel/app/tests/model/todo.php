@@ -767,20 +767,6 @@ class Test_Model_Todo extends \TestCase
         $rc=$todo->validData();
     }
 
-    /**
-     * 異常：カテゴリ (例外エラー)
-     * @expectedException Exception
-     * @test
-     */
-    public function validData_ng_category1(){
-        Model_Fieldset::reset();  //validationインスタンスを初期化
-        $todo = new Model_Todo();
-        $work=$this->_entry_data;
-        $work['category_id']='a';
-        $todo->setData($work,5);
-        $rc=$todo->validData();
-    }
-
    /**
      * 異常：UID (例外エラー1)
      * @expectedException Exception
