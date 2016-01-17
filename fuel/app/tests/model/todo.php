@@ -703,6 +703,25 @@ class Test_Model_Todo extends \TestCase
         $this->assertEquals( "終了の日時の書式が不正です。",$todo->getMessage());
     }
 
+   /**
+     * 異常：終了（日付不正2）
+     * @test
+     */
+    public function validData_ng_end2(){
+        Model_Fieldset::reset();  //validationインスタンスを初期化
+        $todo = new Model_Todo();
+        $work=$this->_entry_data;
+        $work['end_y']='2016';
+        $work['end_m']='02';
+        $work['end_d']='30';
+        $work['end_h']='00';
+        $work['end_mi']='00';
+        $todo->setData($work,5);
+        $rc=$todo->validData();
+        $this->assertFalse($rc);
+        $this->assertEquals( "終了の日時の書式が不正です。",$todo->getMessage());
+    }
+
     /**
      * 異常：繰り返し間隔（必須）
      * @test

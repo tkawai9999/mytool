@@ -10,10 +10,12 @@ class Model_ValidCustom
     {
         if ( trim($val)=="") return true;
 
-        if (!strptime( $val, '%Y-%m-%d %H:%M:%S' ))
-        {
-            return false;
-        }
+        $work=strptime( $val, '%Y-%m-%d %H:%M:%S' );
+        if (!$work) return false;
+
+        if (!checkdate($work['tm_mon'] + 1, $work['tm_mday'], 
+                       $work['tm_year']+1900)) return false;
+        
         return true;
     }
 

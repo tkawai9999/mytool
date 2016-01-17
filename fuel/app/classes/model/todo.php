@@ -71,7 +71,7 @@ class Model_Todo extends \Orm\Model
         $all = static::find('all', array(
             'where' => array( array('delf', 0),
               array('uid', $uid), ),
-            'order_by' => array('end_date' => 'asc'),
+            'order_by' => array('end_date_real' => 'asc'),
         ));
         Log::debug(DB::last_query());
         $list=array();
@@ -108,7 +108,7 @@ class Model_Todo extends \Orm\Model
             'where' => array( array('delf', 0),
               array('uid', $uid), 
               array('status_id', Config::get('define.statuses_id.untreated')),),
-            'order_by' => array('end_date' => 'asc'),
+            'order_by' => array('end_date_real' => 'asc'),
         ));
         Log::debug(DB::last_query());
 
