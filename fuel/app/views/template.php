@@ -12,7 +12,7 @@
 
     <!-- Bootstrap core CSS -->
     <?php echo Asset::css(array('bootstrap.min.css','bootstrap-custom.css')); ?>
-    <?php echo Asset::js(array('jquery-2.1.4.min.js','bootstrap2.min.js','mytool.js'));?>
+    <?php echo Asset::js(array('jquery-2.1.4.min.js','bootstrap2.min.js','bootbox.min.js','mytool.js'));?>
     <?php echo Asset::css(array('dashboard.css','signin.css')); ?>
   </head>
   <body>

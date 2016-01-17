@@ -45,13 +45,13 @@ function actionForm(url,id) {
   }).done(function(json){
     if( json.res != 'OK' )
     {
-      alert(json.error);
+      bootbox.alert(json.error, function() {});
       return;
     }
     location.reload(true);
 
   }).fail(function() {
-          alert('ajaxエラーが発生しました');
+    bootbox.alert('ajaxエラーが発生しました', function() {});
   });
 }
 function closeForm() {
@@ -93,11 +93,11 @@ function actionCategory(url,delf) {
   }).done(function(json){
     if( json.res != 'OK' )
     {
-      alert(json.error);
+      bootbox.alert(json.error, function() {});
     }
     openForm('/mytool/categoryedit','','refresh');
   }).fail(function() {
-          alert('ajaxエラーが発生しました');
+    bootbox.alert('ajaxエラーが発生しました', function() {});
   });
 }
 

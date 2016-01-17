@@ -13,11 +13,9 @@
 
     <!-- Bootstrap core CSS -->
     <?php echo Asset::css('bootstrap.min.css','bootstrap-custom.css'); ?>
-    <?php echo Asset::js(array('bootstrap.min.js','jquery-2.1.4.min.js'));?>
     <?php echo Asset::css('dashboard.css'); ?>
   <script>
   $(document).ready(function(){
-alert('a');
       changeRepeat(); 
   });
   </script>
