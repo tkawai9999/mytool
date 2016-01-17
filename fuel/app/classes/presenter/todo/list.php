@@ -9,7 +9,6 @@ class Presenter_Todo_List extends Presenter
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
 
-        $this->page_name =  "";
 
         //ログインID取得
         $login_user=Auth::get_user_id();
