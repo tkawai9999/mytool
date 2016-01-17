@@ -287,16 +287,78 @@ class Model_Category extends \Orm\Model
     }
 
     /**
-     * データを削除する
+     * データを並べ替える（ソートの入れ替え）
      *
-     * @param $id 削除対象のid
-     * @uidm $id ログインユーザID
-     * @return true:正常  false:異常
+     * @param  $from_category_id 対象のカテゴリID
+     * @param  $move_action  up:上に移動 down:下に移動
+     * @param  $uid ログインユーザID
+     * @return なし
      */
-    public static function deleteData($id, $uid)
+    public static function sort ($from_category_id, $move_action, $uid)
     {
         Log::debug("START ".__CLASS__.":".__FUNCTION__);
+
+        if ( $move_action == "up" )
+        {
+            $order_by='desc';
+        }
+        elseif ( $move_action == "down" )
+        {
+            $order_by='asc';
+        }
+        else
+        {
+            $msg="move action不正=$move_action";
+            Log::error($msg.":".__FILE__.":".__LINE__);
+            throw new Exception($msg);
+        }
+
+        $list = static::find('all', array(
+            'where' => array( array('delf', 0),
+                       array('uid', $uid),),
+            'order_by' => array('sort_no' => $order_by),
+        ));
+        Log::debug(DB::last_query());
+
+        $from_find_flag=false;
+        $to_find_flag=false;
+        foreach ( $list as $rec)
+        {
+            //フラグがONで最初のデータが入れ替え対象
+            if ( $from_find_flag ) {
+                $to_category_id=$rec->id;
+                $to_sort_no=$rec->sort_no;
+                Log::debug("to id=$to_category_id, sort=$to_sort_no");
+                $to_find_flag=true;
+                break;
+            }
+            //対象のカテゴリIDを見つけたらフラグをONにする
+            if ( $rec->id== $from_category_id)
+            {
+                $from_sort_no=$rec->sort_no;
+                Log::debug("from id=$from_category_id, sort=$from_sort_no");
+                $from_find_flag=true;
+            }
+        }
+
+        if (!$from_find_flag)
+        {
+            $msg="category_idなし=$from_category_id";
+            Log::error($msg.":".__FILE__.":".__LINE__);
+            throw new Exception($msg);
+        }
+
+        //対象が先頭/末尾なら並べ替え不要
+        if (!$to_find_flag) return;
+
+        //ソート番号入れ替え
+        $category = static::find($from_category_id);
+        $category->sort_no=$to_sort_no;
+        $category->save();
+        $category = static::find($to_category_id);
+        $category->sort_no=$from_sort_no;
+        $category->save();
         Log::debug("END ".__CLASS__.":".__FUNCTION__);
-        return true;
+
     }
 }

@@ -34,17 +34,14 @@
           </div>
         </div>
         <p class="text-right">
-<!--
-          <button type="button" class="btn btn-danger" 
-              data-dismiss="modal">↑</button>&nbsp;
-          <button type="button" class="btn btn-danger" 
-              data-dismiss="modal">↓</button>&nbsp;&nbsp;
--->
+          <button type="button" class="btn btn-warning" data-dismiss="modal"
+            onClick="sortCategory('up')">↑</button>&nbsp;
+          <button type="button" class="btn btn-warning" data-dismiss="modal"
+            onClick="sortCategory('down')">↓</button>&nbsp;&nbsp;
           <button type="button" class="btn btn-success" 
                onClick="clearCategory()">クリア</button>&nbsp;&nbsp;
           <button type="button" class="btn btn-danger" data-dismiss="modal"
-              onClick="actionCategory('/mytool/categoryedit/delete','1')">
-              削除</button>&nbsp;&nbsp;
+              onClick="deleteCategory()"> 削除</button>&nbsp;&nbsp;
           <button type="button" class="btn btn-primary"  
               onClick="actionCategory('/mytool/categoryedit/save','0')">
               保存</button>

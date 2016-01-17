@@ -133,4 +133,54 @@ class Controller_CategoryEdit extends Controller_Hybrid
             $this->template->content = View::forge('error',$data);
         }
     }
+
+     /**
+     * 並べ替え（上に移動）
+     *
+     */
+    public function action_up()
+    {
+        try
+        {
+            $data=Input::post();
+            Model_Category::sort($data['category_id'], 'up',$this->_uid);
+
+            $json = array(
+                'res'   => 'OK',
+                'error' => '',
+            );
+           $this->response($json);
+
+        }
+        catch (Exception $e)
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
+    }
+
+    /**
+     * 並べ替え（下に移動）
+     *
+     */
+    public function action_down()
+    {
+        try
+        {
+            $data=Input::post();
+            Model_Category::sort($data['category_id'], 'down', $this->_uid);
+
+            $json = array(
+                'res'   => 'OK',
+                'error' => '',
+            );
+           $this->response($json);
+
+        }
+        catch (Exception $e)
+        {
+            $data['message']=$e->getmessage();
+            $this->template->content = View::forge('error',$data);
+        }
+    }
 }
