@@ -70,6 +70,7 @@ class Controller_TodoList extends Controller_Template
         }
         catch (Exception $e) 
         {
+            Model_Util::logException($e);
             $data['message']=$e->getmessage();
             $this->template->content = View::forge('error',$data);
         }
@@ -96,6 +97,7 @@ class Controller_TodoList extends Controller_Template
         }
         catch (Exception $e) 
         {
+            Model_Util::logException($e);
             $data['message']=$e->getmessage();
             $this->template->content = View::forge('error',$data);
         }
@@ -122,6 +124,7 @@ class Controller_TodoList extends Controller_Template
         }
         catch (Exception $e) 
         {
+            Model_Util::logException($e);
             $data['message']=$e->getmessage();
             $this->template->content = View::forge('error',$data);
         }
@@ -148,6 +151,7 @@ class Controller_TodoList extends Controller_Template
         }
         catch (Exception $e) 
         {
+            Model_Util::logException($e);
             $data['message']=$e->getmessage();
             $this->template->content = View::forge('error',$data);
         }
@@ -174,6 +178,7 @@ class Controller_TodoList extends Controller_Template
         }
         catch (Exception $e) 
         {
+            Model_Util::logException($e);
             $data['message']=$e->getmessage();
             $this->template->content = View::forge('error',$data);
         }
@@ -199,6 +204,7 @@ class Controller_TodoList extends Controller_Template
         }
         catch (Exception $e) 
         {
+            Model_Util::logException($e);
             $data['message']=$e->getmessage();
             $this->template->content = View::forge('error',$data);
         }
@@ -250,6 +256,7 @@ class Controller_TodoList extends Controller_Template
         }
         catch (Exception $e) 
         {
+            Model_Util::logException($e);
             $data['message']=$e->getmessage();
             $this->template->content = View::forge('error',$data);
         }

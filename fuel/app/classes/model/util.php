@@ -28,4 +28,18 @@ class Model_Util
                 $query = DB::query($sql);
                 $result = $query->execute();
     }
+
+    /**
+     * Exception発生時のエラーログ出力
+     *
+     * @param Exception $e Exception情報
+     */
+    public static function logException($e)
+    {
+        $msg="予期せぬエラーが発生しました。\n";
+        $msg=$msg.$e->getMessage()."\n";
+        $msg=$msg.$e->getTraceAsString();
+        Log::error($msg);
+    }
+
 }

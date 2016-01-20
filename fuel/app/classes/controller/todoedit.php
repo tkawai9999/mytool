@@ -88,11 +88,9 @@ class Controller_TodoEdit extends Controller_Hybrid
         }
         catch (Exception $e) 
         {
-            $json['res'] = 'NG';
-            $msg=$e->getmessage().":".$e->getfile().":".$e->getline();
-            Log::error($msg);
+            Model_Util::logException($e);
 
-            $json['error'] = $e->getmessage();
+            $json['res'] = 'NG';
             $json['error'] = "予期せぬエラーが発生しました。";
             $this->response($json);
         }
@@ -120,11 +118,9 @@ class Controller_TodoEdit extends Controller_Hybrid
         }
         catch (Exception $e) 
         {
-            $json['res'] = 'NG';
-            $msg=$e->getmessage().":".$e->getfile().":".$e->getline();
-            Log::error($msg);
+            Model_Util::logException($e);
 
-            $json['error'] = $e->getmessage();
+            $json['res'] = 'NG';
             $json['error'] = "予期せぬエラーが発生しました。";
             $this->response($json);
         }

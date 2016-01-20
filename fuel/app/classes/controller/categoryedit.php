@@ -86,11 +86,9 @@ class Controller_CategoryEdit extends Controller_Hybrid
         }
         catch (Exception $e)
         {
-            $json['res'] = 'NG';
-            $msg=$e->getmessage().":".$e->getfile().":".$e->getline();
-            Log::error($msg);
+            Model_Util::logException($e);
 
-            $json['error'] = $e->getmessage();
+            $json['res'] = 'NG';
             $json['error'] = "予期せぬエラーが発生しました。";
             $this->response($json);
         }
@@ -129,8 +127,11 @@ class Controller_CategoryEdit extends Controller_Hybrid
         }
         catch (Exception $e)
         {
-            $data['message']=$e->getmessage();
-            $this->template->content = View::forge('error',$data);
+            Model_Util::logException($e);
+
+            $json['res'] = 'NG';
+            $json['error'] = "予期せぬエラーが発生しました。";
+            $this->response($json);
         }
     }
 
@@ -154,8 +155,11 @@ class Controller_CategoryEdit extends Controller_Hybrid
         }
         catch (Exception $e)
         {
-            $data['message']=$e->getmessage();
-            $this->template->content = View::forge('error',$data);
+            Model_Util::logException($e);
+
+            $json['res'] = 'NG';
+            $json['error'] = "予期せぬエラーが発生しました。";
+            $this->response($json);
         }
     }
 
@@ -179,8 +183,11 @@ class Controller_CategoryEdit extends Controller_Hybrid
         }
         catch (Exception $e)
         {
-            $data['message']=$e->getmessage();
-            $this->template->content = View::forge('error',$data);
+            Model_Util::logException($e);
+
+            $json['res'] = 'NG';
+            $json['error'] = "予期せぬエラーが発生しました。";
+            $this->response($json);
         }
     }
 }
