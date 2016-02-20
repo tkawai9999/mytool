@@ -36,6 +36,7 @@ class Test_Model_Todo extends \TestCase
         Config::load('define',true);
         Model_Util::execSqlFile(APPPATH."tests/sql/todo.sql");
         Model_Util::execSqlFile(APPPATH."tests/sql/category.sql");
+        Model_Util::execSqlFile(APPPATH."tests/sql/repetunits.sql");
     }
     /**
      * @afterClass
