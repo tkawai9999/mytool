@@ -15,7 +15,7 @@
         { "type": "vcs", "url": "https://github.com/webfatorial/fuel-db-seeder" }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": "<=5.5.30",
         "composer/installers": "~1.0",
         "fuel/docs": "dev-1.7/master",
         "fuel/core": "dev-1.7/master",
