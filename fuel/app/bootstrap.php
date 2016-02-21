@@ -3,6 +3,7 @@
 require COREPATH.'bootstrap.php';
 
 \Autoloader::add_classes(array(
+    'Log' => APPPATH.'classes/model/log.php',
 	// Add classes you want to override here
 	// Example: 'View' => APPPATH.'classes/view.php',
 ));
