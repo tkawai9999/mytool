@@ -1,11 +1,20 @@
 language: php
 php:
-  - 5.3
-  - 5.4
   - 5.5
 
 before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
+  - mysql -uroot -e "create database mytool_test"
 
-script: php oil test
+script:
+  - FUEL_ENV=test php oil refine migrate
+  - php oil test  --group=All
+
+
+notifications:
+  email:
+    - mailaddress
+  on_success: always
+  on_failure: always
+
