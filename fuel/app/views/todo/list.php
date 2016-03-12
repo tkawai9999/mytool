@@ -21,7 +21,7 @@
 </div>
 <div class="panel panel-info">
   <div class="panel-heading">カテゴリ&nbsp;&nbsp;<button type="button" class="btn btn-primary "
-      onClick="openForm('/mytool/categoryedit','','new');" >編集</button>
+      onClick="openForm('../categoryedit','','new');" >編集</button>
   </div>
   <div class="panel-body">
     <ul class="nav nav-sidebar">
@@ -43,7 +43,7 @@
 </h3>
 <p class="text-right">
   <button type="button" class="btn btn-primary "
-    onClick="openForm('/mytool/todoedit/','','new');" >＋</button>
+    onClick="openForm('../todoedit/','','new');" >＋</button>
 </p>
 <div class="table-responsive">
   <table class="table table-striped  table-hover">
@@ -72,7 +72,7 @@
           </select>
         </td>
         <td>
-          <a onClick="openForm('/mytool/todoedit/','<?php echo $todo->id ?>','new');" >
+          <a onClick="openForm('../todoedit/','<?php echo $todo->id ?>','new');" >
               <?php echo $todo->name; ?></a>
         </td>
         <td><?php echo $todo->category->name ?></td>

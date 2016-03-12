@@ -131,15 +131,15 @@
     <div class="modal-footer">
       <?php if ($todo['todo_id'] ==""): ?>
         <button type="button" class="btn btn-primary"  
-          onClick="actionForm('/mytool/todoedit/save','')"> 新規に保存</button>
+          onClick="actionForm('../todoedit/save','')"> 新規に保存</button>
       <?php else: ?>
         <button type="button" class="btn btn-danger" 
-          onClick="actionForm('/mytool/todoedit/delete','<?php echo $todo['todo_id']?>')">
+          onClick="actionForm('../todoedit/delete','<?php echo $todo['todo_id']?>')">
           削除</button>
         <button type="button" class="btn btn-success" 
-          onClick="actionForm('/mytool/todoedit/save','')"> 新規に保存</button>
+          onClick="actionForm('../todoedit/save','')"> 新規に保存</button>
         <button type="button" class="btn btn-primary"
-          onClick="actionForm('/mytool/todoedit/save','<?php echo $todo['todo_id']?>')">
+          onClick="actionForm('../todoedit/save','<?php echo $todo['todo_id']?>')">
           変更を保存</button>
       <?php endif ?>
     </div><!-- /modal-footer -->

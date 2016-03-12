@@ -43,7 +43,7 @@
           <button type="button" class="btn btn-danger" data-dismiss="modal"
               onClick="deleteCategory()"> 削除</button>&nbsp;&nbsp;
           <button type="button" class="btn btn-primary"  
-              onClick="actionCategory('/mytool/categoryedit/save','0')">
+              onClick="actionCategory('../categoryedit/save','0')">
               保存</button>
         </p>
         <div class="form-group">
