@@ -15,6 +15,7 @@ class Test_Model_Category extends \TestCase
     {
         Config::load('define',true);
         Model_Util::execSqlFile(APPPATH."tests/sql/category.sql");
+        Model_Util::execSqlFile(APPPATH."tests/sql/todo.sql");
     }
     /**
      * @afterClass
