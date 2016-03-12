@@ -83,20 +83,20 @@ function deleteCategory() {
   var obj=document.getElementsByName('category_id');
   if ( obj[0].value=='') {
     bootbox.alert('削除するカテゴリを選択してください', function() {});
-    openForm('/mytool/categoryedit','','refresh');
+    openForm('../categoryedit','','refresh');
     return;
   }
-  actionCategory('/mytool/categoryedit/delete','1');
+  actionCategory('../categoryedit/delete','1');
 }
 function sortCategory(action) {
   var obj=document.getElementsByName('category_id');
   if ( obj[0].value=='') {
     bootbox.alert('並べ替えるカテゴリを選択してください', function() {});
-    openForm('/mytool/categoryedit','','refresh');
+    openForm('../categoryedit','','refresh');
     return;
   }
 
-  var url = '/mytool/categoryedit/' + action;
+  var url = '../categoryedit/' + action;
   actionCategory(url,'1');
 }
 
@@ -116,7 +116,7 @@ function actionCategory(url,delf) {
     {
       bootbox.alert(json.error, function() {});
     }
-    openForm('/mytool/categoryedit','','refresh');
+    openForm('../categoryedit','','refresh');
   }).fail(function() {
     bootbox.alert('ajaxエラーが発生しました', function() {});
   });
